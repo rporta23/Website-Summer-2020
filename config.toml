@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://goofy-panini-21c805.netlify.app/"
 languageCode = "en-us"
 title = "Rose Porta"
 theme = "hugo-lithium"
@@ -12,12 +12,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [[menu.main]]
     name = "About"
     url = "/about/"
+
 [[menu.main]]
-    name = "GitHub"
-    url = "https://github.com/rstudio/blogdown"
-[[menu.main]]
-    name = "Twitter"
-    url = "https://twitter.com/rstudio"
+    name = "Projects"
+    url = "/projects/"
 
 [params]
     description = "Experiment learning R blogdown."
