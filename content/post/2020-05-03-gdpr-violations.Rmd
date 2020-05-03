@@ -6,10 +6,67 @@ slug: gdpr-violations
 categories: []
 tags: []
 ---
-```{r}
+```{r, echo=FALSE,include=FALSE}
 library(tidyverse)
 library(tidytuesdayR)
+library(lubridate)
 gdpr_violations <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_violations.tsv')
 gdpr_text <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_text.tsv')
+```
+One of my goals for the summer is to practice my R skills using data provided by the R for Data Science Tidy Tuesday Project ^[https://github.com/rfordatascience/tidytuesday/tree/master/data/2020]. A data set is posted on the Tidy Tuesday github repository every week, and the goal is to wrangle and vizualize the data and share your plots on twitter using #TidyTuesday. 
+
+This week, for my first post, I will be using the data from the week 17 of 2020 (04-21-20) just to get started, and then from next week on I will use the new datasets corresponding to the week.
+
+This week's dataset contains information about GDPR violations in the EU. Data privacy has recently become an increasingly important issue as technology has allowed for companies to easily collect data about their users. In order to crack down on privacy violations, the EU enacted the General Data Protection Regulation (GDPR) in May 2018. The policy outlines a set of regulations that all companies who serve clients in the EU must comply with in order to protect the privacy of their customers. More information about the policy can be found [here](https://www.coredna.com/blogs/general-data-protection-regulation) ^[https://www.coredna.com/blogs/general-data-protection-regulation]. If a company fails to meet the regulations, they are issued a fine. Data about the nature of the fines over the past two years since the enactment of the policy are in the gdpr_violations dataset. 
+
+# GDPR Violations Over Time
+
+```{r}
+# Time series plots
+# Separate date into year, month, day
+gdpr_violations <- gdpr_violations %>% 
+  mutate(date = mdy(date), 
+         year = lubridate::year(date),
+         month = lubridate::month(date), 
+         day = lubridate::day(date))
+
+# get counts by year and month
+gdpr_counts <- gdpr_violations %>% 
+  group_by(year, month) %>% 
+  summarize(count = n()) %>% 
+  filter(year != "1970")
+
+# Create time series plot faceted by year
+ggplot(gdpr_counts, aes(x = month, y = count)) +
+  geom_line() +
+  facet_wrap(~ year) +
+  labs(title = "Number of GDPR Violations Over Time")
+```
+Based on this plot, it appears that when the policy was first implemented in May 2018, there were very few violations, but the number of violations started to grow quickly toward the end of 2018 onward. I would be curious about what initiated the extreme spike in violations around october 2019.
+
+In order to create this plot, I needed to separate the date variable into separate year, month, and day variables using lubridate. Then, I grouped by year and month and used the summarize dpylr function to calculate the number of violations in each month of each year. I then created the faceted time series plot using ggplot. 
+
+```{r}
+# Histogram showing price distribution
+# change units of price to 1000s of dollars
+gdpr_price <- gdpr_violations %>% 
+  mutate(price_1000s = price/1000)
+
+# create histogram
+ggplot(gdpr_price, aes(x = price_1000s)) +
+  geom_histogram(bins = 20) +
+  labs(title = "GDPR Price Distribution")
+```
+
+Based on this histogram, there was a very wide range of fines distributed for GDPR violations. The majority were less than \$5,000,000, but fines up to \$50,000,000 were issued. 
+
+```{r}
+gdpr_price_low <- gdpr_price %>% 
+  filter(price_1000s < 100)
+
+# create histogram
+ggplot(gdpr_price_low, aes(x = price_1000s)) +
+  geom_histogram(bins = 20) +
+  labs(title = "GDPR Price Distribution")
 ```
 

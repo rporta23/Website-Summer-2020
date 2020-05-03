@@ -60,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">1 min read</span>
+    <span class="article-duration">3 min read</span>
     
 
     <h1 class="article-title">GDPR Violations</h1>
@@ -73,42 +73,60 @@
       
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
-## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
-## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
-## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(tidytuesdayR)
-gdpr_violations &lt;- readr::read_tsv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_violations.tsv&#39;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   id = col_double(),
-##   picture = col_character(),
-##   name = col_character(),
-##   price = col_double(),
-##   authority = col_character(),
-##   date = col_character(),
-##   controller = col_character(),
-##   article_violated = col_character(),
-##   type = col_character(),
-##   source = col_character(),
-##   summary = col_character()
-## )</code></pre>
-<pre class="r"><code>gdpr_text &lt;- readr::read_tsv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_text.tsv&#39;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   chapter = col_double(),
-##   chapter_title = col_character(),
-##   article = col_double(),
-##   article_title = col_character(),
-##   sub_article = col_double(),
-##   gdpr_text = col_character(),
-##   href = col_character()
-## )</code></pre>
+<p>One of my goals for the summer is to practice my R skills using data provided by the R for Data Science Tidy Tuesday Project <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. A data set is posted on the Tidy Tuesday github repository every week, and the goal is to wrangle and vizualize the data and share your plots on twitter using #TidyTuesday.</p>
+<p>This week, for my first post, I will be using the data from the week 17 of 2020 (04-21-20) just to get started, and then from next week on I will use the new datasets corresponding to the week.</p>
+<p>This week’s dataset contains information about GDPR violations in the EU. Data privacy has recently become an increasingly important issue as technology has allowed for companies to easily collect data about their users. In order to crack down on privacy violations, the EU enacted the General Data Protection Regulation (GDPR) in May 2018. The policy outlines a set of regulations that all companies who serve clients in the EU must comply with in order to protect the privacy of their customers. More information about the policy can be found <a href="https://www.coredna.com/blogs/general-data-protection-regulation">here</a> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. If a company fails to meet the regulations, they are issued a fine. Data about the nature of the fines over the past two years since the enactment of the policy are in the gdpr_violations dataset.</p>
+<div id="gdpr-violations-over-time" class="section level1">
+<h1>GDPR Violations Over Time</h1>
+<pre class="r"><code># Time series plots
+# Separate date into year, month, day
+gdpr_violations &lt;- gdpr_violations %&gt;% 
+  mutate(date = mdy(date), 
+         year = lubridate::year(date),
+         month = lubridate::month(date), 
+         day = lubridate::day(date))
+
+# get counts by year and month
+gdpr_counts &lt;- gdpr_violations %&gt;% 
+  group_by(year, month) %&gt;% 
+  summarize(count = n()) %&gt;% 
+  filter(year != &quot;1970&quot;)
+
+# Create time series plot faceted by year
+ggplot(gdpr_counts, aes(x = month, y = count)) +
+  geom_line() +
+  facet_wrap(~ year) +
+  labs(title = &quot;Number of GDPR Violations Over Time&quot;)</code></pre>
+<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+Based on this plot, it appears that when the policy was first implemented in May 2018, there were very few violations, but the number of violations started to grow quickly toward the end of 2018 onward. I would be curious about what initiated the extreme spike in violations around october 2019.</p>
+<p>In order to create this plot, I needed to separate the date variable into separate year, month, and day variables using lubridate. Then, I grouped by year and month and used the summarize dpylr function to calculate the number of violations in each month of each year. I then created the faceted time series plot using ggplot.</p>
+<pre class="r"><code># Histogram showing price distribution
+# change units of price to 1000s of dollars
+gdpr_price &lt;- gdpr_violations %&gt;% 
+  mutate(price_1000s = price/1000)
+
+# create histogram
+ggplot(gdpr_price, aes(x = price_1000s)) +
+  geom_histogram(bins = 20) +
+  labs(title = &quot;GDPR Price Distribution&quot;)</code></pre>
+<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Based on this histogram, there was a very wide range of fines distributed for GDPR violations. The majority were less than $5,000,000, but fines up to $50,000,000 were issued.</p>
+<pre class="r"><code>gdpr_price_low &lt;- gdpr_price %&gt;% 
+  filter(price_1000s &lt; 100)
+
+# create histogram
+ggplot(gdpr_price_low, aes(x = price_1000s)) +
+  geom_histogram(bins = 20) +
+  labs(title = &quot;GDPR Price Distribution&quot;)</code></pre>
+<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2020" class="uri">https://github.com/rfordatascience/tidytuesday/tree/master/data/2020</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.coredna.com/blogs/general-data-protection-regulation" class="uri">https://www.coredna.com/blogs/general-data-protection-regulation</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
 
     </div>
   </article>
@@ -145,6 +163,9 @@ gdpr_violations &lt;- readr::read_tsv(&#39;https://raw.githubusercontent.com/rfo
 
 
     
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
 
     
   </body>
