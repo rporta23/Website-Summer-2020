@@ -9,6 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Rose Porta
+ My name is Rose Porta and I am a current student at Smith College class of 2023. I plan to major in Statisitical and Data Sciences and minor in Dance. 
+ 
+# Contact Info
 
-Smith College Student class of 2023
+rporta@smith.edu
+ 
+

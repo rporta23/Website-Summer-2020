@@ -1,0 +1,47 @@
+---
+title: GDPR Violations
+author: Rose Porta
+date: '2020-05-03'
+slug: gdpr-violations
+categories: []
+tags: []
+---
+
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ──────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(tidytuesdayR)
+gdpr_violations &lt;- readr::read_tsv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_violations.tsv&#39;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   id = col_double(),
+##   picture = col_character(),
+##   name = col_character(),
+##   price = col_double(),
+##   authority = col_character(),
+##   date = col_character(),
+##   controller = col_character(),
+##   article_violated = col_character(),
+##   type = col_character(),
+##   source = col_character(),
+##   summary = col_character()
+## )</code></pre>
+<pre class="r"><code>gdpr_text &lt;- readr::read_tsv(&#39;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_text.tsv&#39;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   chapter = col_double(),
+##   chapter_title = col_character(),
+##   article = col_double(),
+##   article_title = col_character(),
+##   sub_article = col_double(),
+##   gdpr_text = col_character(),
+##   href = col_character()
+## )</code></pre>
