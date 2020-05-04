@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+![](/./about_files/IMG_0160_pp.jpg){width=200px height=300px}
+
  My name is Rose Porta and I am a current student at Smith College class of 2023. I plan to major in Statisitical and Data Sciences and minor in Dance. 
  
 # Contact Info

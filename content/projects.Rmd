@@ -9,17 +9,18 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 2019
-
-## SDS 192 Final Project: Does holding kids back increase their odds of academic success?
-
-https://eager-mcclintock-33c6b1.netlify.app/
-
-# 2020
+# Spring 2020
 
 ## Multiple Regression Final Project: Analysis of Sleep and Anxiety as Predictors of BMI
 
 [Final Report](https://github.com/statsmed-sheep/sds291-csrpackage/blob/master/Final-Report.pdf)
 
 [Github Repository](https://github.com/statsmed-sheep/sds291-csrpackage)
+
+# Fall 2019
+
+## SDS 192 Final Project: Does holding kids back increase their odds of academic success?
+
+https://eager-mcclintock-33c6b1.netlify.app/
+
 
