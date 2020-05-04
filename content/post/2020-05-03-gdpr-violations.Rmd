@@ -80,7 +80,7 @@ ggplot(gdpr_price_low, aes(x = price_1000s)) +
 
 # Top Countries
 
-```{r}
+```{r, echo=FALSE}
 # Calculate total number of violations by country
 gdpr_country <- gdpr_violations %>% 
   group_by(name) %>% 
@@ -94,7 +94,7 @@ ggplot(gdpr_country, aes(x = name, y = count, fill = name)) +
   labs(title = "Number of GDPR Violations by Country (Top 5)")
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Calculate total price by country
 gdpr_country_price <- gdpr_violations %>% 
   group_by(name) %>% 
