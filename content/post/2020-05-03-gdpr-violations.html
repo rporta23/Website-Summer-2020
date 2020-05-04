@@ -9,57 +9,63 @@ tags: []
 
 
 
-<p>One of my goals for the summer is to practice my R skills using data provided by the R for Data Science Tidy Tuesday Project <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. A data set is posted on the Tidy Tuesday github repository every week, and the goal is to wrangle and vizualize the data and share your plots on twitter using #TidyTuesday.</p>
-<p>This week, for my first post, I will be using the data from the week 17 of 2020 (04-21-20) just to get started, and then from next week on I will use the new datasets corresponding to the week.</p>
-<p>This week’s dataset contains information about GDPR violations in the EU. Data privacy has recently become an increasingly important issue as technology has allowed for companies to easily collect data about their users. In order to crack down on privacy violations, the EU enacted the General Data Protection Regulation (GDPR) in May 2018. The policy outlines a set of regulations that all companies who serve clients in the EU must comply with in order to protect the privacy of their customers. More information about the policy can be found <a href="https://www.coredna.com/blogs/general-data-protection-regulation">here</a> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. If a company fails to meet the regulations, they are issued a fine. Data about the nature of the fines over the past two years since the enactment of the policy are in the gdpr_violations dataset.</p>
+<p>One of my goals for the summer is to practice my R skills using data provided by the R for Data Science Tidy Tuesday Project <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. A data set is posted on the Tidy Tuesday github repository every week, and the goal is to wrangle and vizualize the data and share your plots on twitter using #TidyTuesday. I was inspired by Smith College Alumna Sarah A. Stoudt, who is currently persuing a Ph.D. in statistics, to learn R blogdown and write a blog about my weekly Tidy Tuesday projects! The link to her blog that I took inspiration from is <a href="https://sastoudt.github.io/tidytuesday/">here</a>.</p>
+<p>This week, for my first post, I will be using the data from the week 17 of 2020 (04-21-20) just to get started, and then from next week on I will use the new datasets corresponding to the current week.</p>
+<p>This week’s dataset contains information about GDPR violations in the EU. Data privacy has recently become an increasingly important issue as technology has allowed for companies to easily collect data about their users. In order to crack down on privacy violations, the EU enacted the General Data Protection Regulation (GDPR) in May 2018. The policy outlines a set of regulations that all companies who serve clients in the EU must comply with in order to protect the privacy of their customers. More information about the policy can be found <a href="https://www.coredna.com/blogs/general-data-protection-regulation">here</a> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. If a company fails to meet the regulations, they are issued a fine. Data about the nature of the fines over the past two years since the enactment of the policy are in the gdpr_violations dataset. The source of the data is <a href="https://www.privacyaffairs.com/gdpr-fines/">here</a> <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
 <div id="gdpr-violations-over-time" class="section level1">
 <h1>GDPR Violations Over Time</h1>
-<pre class="r"><code># Time series plots
-# Separate date into year, month, day
-gdpr_violations &lt;- gdpr_violations %&gt;% 
-  mutate(date = mdy(date), 
-         year = lubridate::year(date),
-         month = lubridate::month(date), 
-         day = lubridate::day(date))
-
-# get counts by year and month
-gdpr_counts &lt;- gdpr_violations %&gt;% 
-  group_by(year, month) %&gt;% 
-  summarize(count = n()) %&gt;% 
-  filter(year != &quot;1970&quot;)
-
-# Create time series plot faceted by year
-ggplot(gdpr_counts, aes(x = month, y = count)) +
-  geom_line() +
-  facet_wrap(~ year) +
-  labs(title = &quot;Number of GDPR Violations Over Time&quot;)</code></pre>
-<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-2-1.png" width="672" />
-Based on this plot, it appears that when the policy was first implemented in May 2018, there were very few violations, but the number of violations started to grow quickly toward the end of 2018 onward. I would be curious about what initiated the extreme spike in violations around october 2019.</p>
-<p>In order to create this plot, I needed to separate the date variable into separate year, month, and day variables using lubridate. Then, I grouped by year and month and used the summarize dpylr function to calculate the number of violations in each month of each year. I then created the faceted time series plot using ggplot.</p>
-<pre class="r"><code># Histogram showing price distribution
-# change units of price to 1000s of dollars
-gdpr_price &lt;- gdpr_violations %&gt;% 
-  mutate(price_1000s = price/1000)
-
-# create histogram
-ggplot(gdpr_price, aes(x = price_1000s)) +
-  geom_histogram(bins = 20) +
-  labs(title = &quot;GDPR Price Distribution&quot;)</code></pre>
+<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Based on this plot, it appears that when the policy was first implemented in May 2018, there were very few violations, but the number of violations started to grow quickly toward the end of 2018 onward. I would be curious about what initiated the extreme spike in violations around october 2019.</p>
+</div>
+<div id="what-is-the-cost-of-a-gdpr-violation" class="section level1">
+<h1>What is the cost of a GDPR Violation?</h1>
 <p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>Based on this histogram, there was a very wide range of fines distributed for GDPR violations. The majority were less than $5,000,000, but fines up to $50,000,000 were issued.</p>
-<pre class="r"><code>gdpr_price_low &lt;- gdpr_price %&gt;% 
-  filter(price_1000s &lt; 100)
-
-# create histogram
-ggplot(gdpr_price_low, aes(x = price_1000s)) +
-  geom_histogram(bins = 20) +
-  labs(title = &quot;GDPR Price Distribution&quot;)</code></pre>
+<p>Based on this histogram, there was a very wide range of fines distributed for GDPR violations. The majority appear to be on the lower end of the spectrum, but fines up to 50,000,000 euros were issued.</p>
+<p>Since there is such a large range of prices, but only a few fines are very high, I made another histogram below limiting it to the prices below 100,000 euros. This histogram shows the distribution of the majority of the prices more clearly. Even among just the lower prices, most prices seem to be below about 10,000 euros.</p>
 <p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="top-countries" class="section level1">
+<h1>Top Countries</h1>
+<pre class="r"><code># Calculate total number of violations by country
+gdpr_country &lt;- gdpr_violations %&gt;% 
+  group_by(name) %&gt;% 
+  summarise(count = n()) %&gt;% 
+  mutate(name = reorder(name, -count)) %&gt;% 
+  top_n(n = 5, wt = count)
+
+# Create bar plot for top 5 countries
+ggplot(gdpr_country, aes(x = name, y = count, fill = name)) +
+  geom_col() + 
+  labs(title = &quot;Number of GDPR Violations by Country (Top 5)&quot;)</code></pre>
+<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># Calculate total price by country
+gdpr_country_price &lt;- gdpr_violations %&gt;% 
+  group_by(name) %&gt;% 
+  summarise(total_price = sum(price)) %&gt;% 
+  mutate(total_price_millions = total_price/1000000) %&gt;% 
+  mutate(name = reorder(name, -total_price_millions)) %&gt;% 
+  top_n(n = 5, wt = total_price_millions) 
+
+# create bar plot of total price for Top 5 countries
+ggplot(gdpr_country_price, aes(x = name, 
+                               y = total_price_millions,
+                               fill = name)) +
+  geom_col() +
+  labs(
+    title = &quot;Total Cost of GDPR Violations 2018-2020 by Country (Top5)&quot;,
+    x = &quot;Country Name&quot;,
+    fill = &quot;Country Name&quot;,
+    y = &quot;Total Price (Millions of Euros)&quot;)</code></pre>
+<p><img src="/post/2020-05-03-gdpr-violations_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Surprisingly, the top 5 countries for number of violations does not align directly with the top 5 countries for total cost of GDPR violations over the period 2018-2020. For example, Spain has the highest number of violations by far, but is not even in the top 5 for total cost, so most of its violations must have been relatively small. On the other hand, France and Italy, the top two for total cost, did not even make the top 5 for number of violations.</p>
+<p>Exploring this data made me curious to learn more about the impacts of the implementation of the GDPR policy. I would be curious to know how effective it is in comparison to U.S. data privacy laws, which I believe are much more lenient in terms of how companies can use customers’ data. Based on the fact that the number of violations has grown significantly since the policy was first implemented, and the majority of the fines issued seem to be relatively inexpensive, it seems that the consequences for companies of violating the GDPR may need to increase in order for the policy to be truly effective in protecting customers’ privacy. Of course, these visualizations do not by any means tell the whole story, and I would have to do more research to verify that conclusion.</p>
+<p>Well, that’s it for my first post! Stay tuned for next time!</p>
 </div>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2020" class="uri">https://github.com/rfordatascience/tidytuesday/tree/master/data/2020</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p><a href="https://www.coredna.com/blogs/general-data-protection-regulation" class="uri">https://www.coredna.com/blogs/general-data-protection-regulation</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://www.privacyaffairs.com/gdpr-fines/" class="uri">https://www.privacyaffairs.com/gdpr-fines/</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
