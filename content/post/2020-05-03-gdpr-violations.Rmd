@@ -120,3 +120,5 @@ Surprisingly, the top 5 countries for number of violations does not align direct
 Exploring this data made me curious to learn more about the impacts of the implementation of the GDPR policy. I would be curious to know how effective it is in comparison to U.S. data privacy laws, which I believe are much more lenient in terms of how companies can use customers' data. Based on the fact that the number of violations has grown significantly since the policy was first implemented, and the majority of the fines issued seem to be relatively inexpensive, it seems that the consequences for companies of violating the GDPR may need to increase in order for the policy to be truly effective in protecting customers' privacy. Of course, these visualizations do not by any means tell the whole story, and I would have to do more research to verify that conclusion.
 
 Well, that's it for my first post! Stay tuned for next time!
+
+The code used to generate this post can be found [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-05-03-gdpr-violations.Rmd).
