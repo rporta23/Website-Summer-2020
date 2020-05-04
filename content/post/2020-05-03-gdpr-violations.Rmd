@@ -109,7 +109,7 @@ ggplot(gdpr_country_price, aes(x = name,
                                fill = name)) +
   geom_col() +
   labs(
-    title = "Total Cost of GDPR Violations 2018-2020 by Country (Top5)",
+    title = "Total Cost of GDPR Violations 2018-2020 by Country (Top 5)",
     x = "Country Name",
     fill = "Country Name",
     y = "Total Price (Millions of Euros)")
