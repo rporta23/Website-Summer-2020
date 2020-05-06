@@ -1,0 +1,55 @@
+---
+title: Animal Crossing
+author: Rose Porta
+date: '2020-05-05'
+slug: animal-crossing
+categories: []
+tags: []
+draft: true
+---
+```{r, echo = FALSE, include=FALSE}
+# read in data
+critic <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/critic.tsv')
+user_reviews <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/user_reviews.tsv')
+items <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/items.csv')
+villagers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/villagers.csv')
+
+# load packages
+library(tidyverse)
+```
+
+```{r, echo = FALSE}
+# calculate average grade by date for users
+user_reviews2 <- user_reviews %>% 
+  group_by(date) %>% 
+  summarize(avg_grade = mean(grade))
+
+# calculate average grade by date for critics
+critic_reviews2 <- critic %>% 
+  mutate(grade_out_of_10 = grade/10) %>% 
+  group_by(date) %>% 
+  summarize(avg_grade = mean(grade_out_of_10))
+
+ggplot() +
+  geom_line(data = user_reviews2, aes(x = date, y = avg_grade, color = "users")) +
+  geom_line(data = critic_reviews2, aes(x = date, y = avg_grade, color = "critics")) +
+  labs(x = "Date", y = "Average Grade (out of 10)", title = "Average Reviews for Animal Crossing Over Time: Users versus Critics")
+```
+
+```{r, echo = FALSE}
+critic2 <- critic %>% 
+  mutate(grade_out_of_10 = grade/10)
+
+ggplot(critic2, aes(y = grade_out_of_10)) +
+  geom_boxplot(fill = "#F8766D") +
+  labs(y = "Grade (out of 10)", 
+       title = "Overall Distribution of Reviews by Critics")
+  
+ggplot(user_reviews, aes(y = grade)) +
+  geom_boxplot(fill = "#00BFC4") +
+  labs(y = "Grade (out of 10)", 
+       title = "Overall Distribution of Reviews by Users")
+   
+```
+
+
