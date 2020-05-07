@@ -1,11 +1,11 @@
 ---
 title: Animal Crossing
 author: Rose Porta
-date: '2020-05-05'
+date: '2020-05-07'
 slug: animal-crossing
 categories: []
 tags: []
-draft: true
+draft: false
 ---
 ```{r, echo = FALSE, include=FALSE}
 # read in data
@@ -22,7 +22,7 @@ Animal Crossing is a Nintendo video game, and the latest version, Animal Crossin
 
 The #TidyTuesday data this week contains information about Animal Crossing reviews by both critics and consumers ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md]. The data contains a numerical score associated with each review as well as the qualitative text review. 
 
-# Critic Reviews Versus User Reviews Over Time
+# Trends in Reviews Over Time: Critics Versus Users
 
 In order to see the overall trends in the reviews of critics versus users, I created a time series plot showing the trends over time in the average numerical ratings by critics and users (out of 10) since the game was released. The critics originally gave scores out of 100, but I converted them to be out of 10 for more consistent comparison to user reviews, which were out of 10. 
 
@@ -41,7 +41,7 @@ critic_reviews2 <- critic %>%
 ggplot() +
   geom_line(data = user_reviews2, aes(x = date, y = avg_grade, color = "users")) +
   geom_line(data = critic_reviews2, aes(x = date, y = avg_grade, color = "critics")) +
-  labs(x = "Date", y = "Average Grade (out of 10)", title = "Average Reviews for Animal Crossing Over Time: Users versus Critics")
+  labs(x = "Date", y = "Average Grade (out of 10)", title = "Average Reviews Over Time: Users versus Critics")
 ```
 
 Surprisingly, given the enormous commercial success of the game, the reviews by critics appear to be significantly higher than the reviews by users. In [this article](https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/), one critic, Jeff Grubb, offers some insight as to why users may be frustrated with certain aspects of the new game compared to older versions of the game ^[https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/]. This could be partly why users rated the game so poorly, but it still does not fully explain why reviews by critics would be so significantly higher. 
@@ -68,38 +68,110 @@ ggplot(user_reviews, aes(y = grade)) +
    
 ```
 
-Consistent with the line graph, the median grade given by users appears to be almost 7 points lower than that given by critics, and this is an enormous difference on a 10 point scale! Furthermore, the scores given by users were much more widely spread out than those given by critics. This aspect makes sense given that critics generally approach their reviews with set criteria that is somewhat accepted among critics, so they are likely to reach similar conclusions, wheras users are reviewing the game based on their own very different priorities and preferences. 
+Consistent with the line graph, the median grade given by users appears to be almost 7 points lower than that given by critics, and this is an enormous difference on a 10 point scale! Furthermore, the scores given by users were much more widely spread out than those given by critics. This aspect makes sense given that critics generally approach their reviews with set criteria that is somewhat accepted among critics, so they are likely to reach similar conclusions, whereas users are reviewing the game based on their own very different priorities and preferences. 
 
-Another notable aspect of these plots is that the plot of users' scores has no "whiskers" or outliers, indicating that the minimum score (0) is also the first quartile, and the maximum score (10) is also the third quartile. This likely reflects the fact that users are more likely to review something if they have a strong (positive or negative) opinion about it, so a substantial number of users rated the game a 0 out of 10, but a substantial number also rated the game a 10/10. This effect would not apply to critics because critics are asked by companies to review certain games-- they do not choose which games to review based on how much they like the games. This could be a possible explanation of the large disparity between user reviews and critic reviews. In general, users are more likely to review a product if they have a strong opinion about it at either extreme, but they may be even more inclined to review the game if their strong opinion is negative. If this is the case, the user reviews may not provide an accurate representation of overall user satisfaction. 
+Another notable aspect of these plots is that the plot of users' scores has no "whiskers" or outliers, indicating that the minimum score (0) is also the first quartile, and the maximum score (10) is also the third quartile. This likely reflects the fact that users are more likely to review something if they have a strong (positive or negative) opinion about it, so a substantial number of users rated the game a 0 out of 10, but a substantial number also rated the game a 10 out of 10. This effect would not apply to critics because critics are asked by companies to review certain games-- they do not choose which games to review based on how much they like the games. This could be a possible explanation of the large disparity between user reviews and critic reviews. In general, users are more likely to review a product if they have a strong opinion about it at either extreme, but they may be even more inclined to review the game if their strong opinion is negative. If this is the case, the user reviews may not provide an accurate representation of overall user satisfaction. 
 
-On the other hand, I am not an expert on how video game criticism works, but I believe critics are paid by the distributer of the game to review it. Thus, it seems that they may be more inclined to give a positive review so that they have a higher chance of being hired again by the same distributer, in which case critic reviews may also be a misleading measure of the overall quality of the game. 
+On the other hand, I am not an expert on how video game criticism works, but I believe critics are paid by the distributer of the game to review it. Thus, it seems that they may be more inclined to give a positive review so that they have a higher chance of being hired again by the same distributer. In this case, critic reviews may also be a misleading measure of the overall quality of the game. 
 
 So, is Animal Crossing New Horizons worth buying? According to wikipedia, the game broke the console game record for most digital units sold in a month, having sold 5 million digital copies within the first month of being released ^[https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons]. Plus, the median review by critics is a 9/10, which is pretty darn good. Based on these numbers, the verdict seems like a no brainer. The one piece of the puzzle that doesn't fit is that the median user review is less than a 2.5 out of 10. Based, on that number alone, it would seem obvious that the game was terrible! I have explored some possible reasoning for this seemingly paradoxical disparity, but the definitive reason is still a mystery. 
 
 # Text Analysis
 
-```{r}
+In addition to looking at the numerical scores given by users and critics, I decided to do some qualitative text analysis to dig deeper into the differences between critic and user sentiments about the game. This was my first time doing text analysis in R, so it was a fun new challenge for me! The [Text Mining with R](https://www.tidytextmining.com/) book was a very helpful resource to get me started ^[https://www.tidytextmining.com/].
+
+First, just for fun, I created word clouds of the most commonly used words in the critic and user reviews (I limited it to the top 50 words so they could all fit in the frame). This was not particularly informative because the most common words were pretty similar between the two, and the ones that stand out the most, like "animal", "crossing", "game", "island", and "nintendo" don't tell us a whole lot about the opinions expressed in the reviews. Most of the words that are associated with emotion are positive for both, but it is notable that the word "bad" is in the top 50 most used words for users, while there are no explicitly negative words in the top 50 for critics. 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 # Text Analysis
 
+# load packages for text analysis
 library(tidytext)
 library(wordcloud)
 
+# extract text from critic review data, convert to tidy format with each word corresponding to one observation, eliminate "stop words", and count how many times each unique word appears
 critic_text <- critic %>% 
   select(text) %>% 
   unnest_tokens(word, text) %>% 
   anti_join(stop_words) %>% 
   count(word, sort = TRUE)
-  
-critic_text %>% 
-  with(wordcloud(word, n, max.words = 50))
 
+# extract text from user review data, convert to tidy format with each word corresponding to one observation, eliminate "stop words", and count how many times each unique word appears
 user_text <- user_reviews %>% 
   select(text) %>% 
   unnest_tokens(word, text) %>% 
   anti_join(stop_words) %>% 
   count(word, sort = TRUE)
+```
 
+## Critic Reviews
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# create word clouds for critic reviews
+critic_text %>% 
+  with(wordcloud(word, n, max.words = 50))
+```
+
+## User Reviews
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# create word clouds for user reviews
 user_text %>% 
   with(wordcloud(word, n, max.words = 50))
 ```
+In order to dig deeper into the differences in sentiments being expressed in critic versus user reviews, I used the nrc data set from the textdata package^[This dataset was published in Saif M. Mohammad and Peter Turney. (2013), ``Crowdsourcing a Word-Emotion Association Lexicon.'' Computational Intelligence, 29(3): 436-465.], which is a crowd-sourced data set that classifies almost every word in the english language based on 10 sentiments: positive, negative, trust, anticipation, joy, sadness, fear, anger, surprise, and disgust. I joined this dataset with the data sets containing the words from the user and critic reviews in order to classify each word in the reviews based on these sentiments. Then, I computed the proportion of words associated with each sentiment for critic and user reviews, and compared the proportions using the bar plot below. 
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# Sentiment Analysis
+
+library(textdata)
+# citation info: 
+#This dataset was published in Saif M. Mohammad and Peter Turney. #(2013), ``Crowdsourcing a Word-Emotion Association Lexicon.'' #Computational Intelligence, 29(3): 436-465.
+
+# get sentiments data set from textdata package
+nrc <- get_sentiments("nrc")
+
+# compute proportion of words corresponding to each sentiment for
+# critic reviews
+critic_text2 <- critic_text %>% 
+  inner_join(nrc) %>% 
+  group_by(sentiment) %>% 
+  count(sentiment, sort = TRUE) %>% 
+  ungroup() %>% 
+  mutate(total_words = sum(n), prop_critic = n/total_words)
+  
+# compute proportion of words corresponding to each sentiment for
+# user reviews
+user_text2 <- user_text %>% 
+  inner_join(nrc) %>% 
+  group_by(sentiment) %>% 
+  count(sentiment, sort = TRUE) %>% 
+  ungroup() %>% 
+  mutate(total_words = sum(n), prop_user = n/total_words)
+
+# join sentiment data for users and critics so we can put them in one 
+# graph 
+joined_sentiments <- critic_text2 %>% 
+  inner_join(user_text2, by = "sentiment") %>% 
+  select(sentiment, prop_critic, prop_user) %>% 
+  pivot_longer(names_to = "type", 
+               values_to = "proportion", 
+               cols = -sentiment) %>% 
+  mutate(sentiment = reorder(sentiment, proportion)) %>% 
+  mutate(type = ifelse(type == "prop_critic", "critic", "user"))
+
+# Create bar plot of proportion of words corresponding to each sentiment
+# for users versus critics
+ggplot(joined_sentiments, 
+       aes(x = sentiment, y = proportion, fill = type)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  labs(
+    title = "Proportion of Words by Sentiment: Critic Versus User Reviews")
+
+```
+
+Consistent with the numerical scores being significantly higher for critic reviews, a significantly higher proportion of words in the critic reviews were classified into the categories positive, trust, anticipation, joy and surprise when compared to user reviews. Each of these categories corresponds to the expression of optimism, which makes sense because the numerical scores showed the critic reviews to be much more optimistic than the user reviews. On the other side of it, the proportions for critic reviews were much lower in the negative, sadness, fear, anger, and disgust categories compared to the proportions for user reviews. Each of these categories corresponds to the expression of pessimism, which also aligns with my analysis of the numerical scores. 
+
+Overall, it still puzzles me why the critics and the users would have such drastically different opinions on the same game, but it is clear based on both the quantitative analysis of the scores and the qualitative analysis of the text reviews that critics expressed much higher levels of satisfaction than did users about Nintendo's new release Animal Crossing New Horizons. I will have to do more research on the game and on the process of video game review to better explain these results. 
+
+That's it for this post! Stay tuned for next week!
 
