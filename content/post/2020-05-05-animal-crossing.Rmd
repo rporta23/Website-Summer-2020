@@ -117,6 +117,7 @@ critic_text %>%
 user_text %>% 
   with(wordcloud(word, n, max.words = 50))
 ```
+
 In order to dig deeper into the differences in sentiments being expressed in critic versus user reviews, I used the nrc data set from the textdata package^[This dataset was published in Saif M. Mohammad and Peter Turney. (2013), ``Crowdsourcing a Word-Emotion Association Lexicon.'' Computational Intelligence, 29(3): 436-465.], which is a crowd-sourced data set that classifies almost every word in the english language based on 10 sentiments: positive, negative, trust, anticipation, joy, sadness, fear, anger, surprise, and disgust. I joined this dataset with the data sets containing the words from the user and critic reviews in order to classify each word in the reviews based on these sentiments. Then, I computed the proportion of words associated with each sentiment for critic and user reviews, and compared the proportions using the bar plot below. 
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
