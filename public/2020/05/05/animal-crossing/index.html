@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -55,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">0 min read</span>
+    <span class="article-duration">5 min read</span>
     
 
     <h1 class="article-title">Animal Crossing</h1>
@@ -68,8 +73,60 @@
       
 
 
+<p>Animal Crossing is a Nintendo video game, and the latest version, Animal Crossing New Horizons, released on March 20th 2020 is the latest trend among gamers. It is an open-ended simulation game where the goal is to create a community of anthropomorphic animals on a deserted island. If you want to learn more about it, the wikipedia page is <a href="https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons">here</a> <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+<p>The #TidyTuesday data this week contains information about Animal Crossing reviews by both critics and consumers <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. The data contains a numerical score associated with each review as well as the qualitative text review.</p>
+<div id="critic-reviews-versus-user-reviews-over-time" class="section level1">
+<h1>Critic Reviews Versus User Reviews Over Time</h1>
+<p>In order to see the overall trends in the reviews of critics versus users, I created a time series plot showing the trends over time in the average numerical ratings by critics and users (out of 10) since the game was released. The critics originally gave scores out of 100, but I converted them to be out of 10 for more consistent comparison to user reviews, which were out of 10.</p>
 <p><img src="/post/2020-05-05-animal-crossing_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Surprisingly, given the enormous commercial success of the game, the reviews by critics appear to be significantly higher than the reviews by users. In <a href="https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/">this article</a>, one critic, Jeff Grubb, offers some insight as to why users may be frustrated with certain aspects of the new game compared to older versions of the game <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. This could be partly why users rated the game so poorly, but it still does not fully explain why reviews by critics would be so significantly higher.</p>
+<p>Furthermore, the user reviews have fluctuated but seem to have decreased overall since the release of the game, while reviews by critics have remained relatively consistent. This again raises the question of what is so different between a user’s experience of the game versus a critic’s experience.</p>
+</div>
+<div id="rating-distributions" class="section level1">
+<h1>Rating Distributions</h1>
+<p>In order to compare critic versus user reviews from a slightly different angle, I created boxplots representing the overall distributions of scores.</p>
 <p><img src="/post/2020-05-05-animal-crossing_files/figure-html/unnamed-chunk-3-1.png" width="672" /><img src="/post/2020-05-05-animal-crossing_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<p>Consistent with the line graph, the median grade given by users appears to be almost 7 points lower than that given by critics, and this is an enormous difference on a 10 point scale! Furthermore, the scores given by users were much more widely spread out than those given by critics. This aspect makes sense given that critics generally approach their reviews with set criteria that is somewhat accepted among critics, so they are likely to reach similar conclusions, wheras users are reviewing the game based on their own very different priorities and preferences.</p>
+<p>Another notable aspect of these plots is that the plot of users’ scores has no “whiskers” or outliers, indicating that the minimum score (0) is also the first quartile, and the maximum score (10) is also the third quartile. This likely reflects the fact that users are more likely to review something if they have a strong (positive or negative) opinion about it, so a substantial number of users rated the game a 0 out of 10, but a substantial number also rated the game a 10/10. This effect would not apply to critics because critics are asked by companies to review certain games– they do not choose which games to review based on how much they like the games. This could be a possible explanation of the large disparity between user reviews and critic reviews. In general, users are more likely to review a product if they have a strong opinion about it at either extreme, but they may be even more inclined to review the game if their strong opinion is negative. If this is the case, the user reviews may not provide an accurate representation of overall user satisfaction.</p>
+<p>On the other hand, I am not an expert on how video game criticism works, but I believe critics are paid by the distributer of the game to review it. Thus, it seems that they may be more inclined to give a positive review so that they have a higher chance of being hired again by the same distributer, in which case critic reviews may also be a misleading measure of the overall quality of the game.</p>
+<p>So, is Animal Crossing New Horizons worth buying? According to wikipedia, the game broke the console game record for most digital units sold in a month, having sold 5 million digital copies within the first month of being released <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. Plus, the median review by critics is a 9/10, which is pretty darn good. Based on these numbers, the verdict seems like a no brainer. The one piece of the puzzle that doesn’t fit is that the median user review is less than a 2.5 out of 10. Based, on that number alone, it would seem obvious that the game was terrible! I have explored some possible reasoning for this seemingly paradoxical disparity, but the definitive reason is still a mystery.</p>
+</div>
+<div id="text-analysis" class="section level1">
+<h1>Text Analysis</h1>
+<pre class="r"><code># Text Analysis
+
+library(tidytext)</code></pre>
+<pre><code>## Warning: package &#39;tidytext&#39; was built under R version 3.6.2</code></pre>
+<pre class="r"><code>library(wordcloud)</code></pre>
+<pre><code>## Loading required package: RColorBrewer</code></pre>
+<pre class="r"><code>critic_text &lt;- critic %&gt;% 
+  select(text) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  count(word, sort = TRUE)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code>critic_text %&gt;% 
+  with(wordcloud(word, n, max.words = 50))</code></pre>
+<p><img src="/post/2020-05-05-animal-crossing_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>user_text &lt;- user_reviews %&gt;% 
+  select(text) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  count(word, sort = TRUE)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code>user_text %&gt;% 
+  with(wordcloud(word, n, max.words = 50))</code></pre>
+<p><img src="/post/2020-05-05-animal-crossing_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons" class="uri">https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/" class="uri">https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons" class="uri">https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
 
     </div>
   </article>
@@ -92,6 +149,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 

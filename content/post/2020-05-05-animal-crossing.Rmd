@@ -18,6 +18,14 @@ villagers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/
 library(tidyverse)
 ```
 
+Animal Crossing is a Nintendo video game, and the latest version, Animal Crossing New Horizons, released on March 20th 2020 is the latest trend among gamers. It is an open-ended simulation game where the goal is to create a community of anthropomorphic animals on a deserted island. If you want to learn more about it, the wikipedia page is [here](https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons) ^[https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons]. 
+
+The #TidyTuesday data this week contains information about Animal Crossing reviews by both critics and consumers ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md]. The data contains a numerical score associated with each review as well as the qualitative text review. 
+
+# Critic Reviews Versus User Reviews Over Time
+
+In order to see the overall trends in the reviews of critics versus users, I created a time series plot showing the trends over time in the average numerical ratings by critics and users (out of 10) since the game was released. The critics originally gave scores out of 100, but I converted them to be out of 10 for more consistent comparison to user reviews, which were out of 10. 
+
 ```{r, echo = FALSE}
 # calculate average grade by date for users
 user_reviews2 <- user_reviews %>% 
@@ -36,6 +44,14 @@ ggplot() +
   labs(x = "Date", y = "Average Grade (out of 10)", title = "Average Reviews for Animal Crossing Over Time: Users versus Critics")
 ```
 
+Surprisingly, given the enormous commercial success of the game, the reviews by critics appear to be significantly higher than the reviews by users. In [this article](https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/), one critic, Jeff Grubb, offers some insight as to why users may be frustrated with certain aspects of the new game compared to older versions of the game ^[https://venturebeat.com/2020/04/15/6-weeks-with-animal-crossing-new-horizons-reveals-many-frustrations/]. This could be partly why users rated the game so poorly, but it still does not fully explain why reviews by critics would be so significantly higher. 
+
+Furthermore, the user reviews have fluctuated but seem to have decreased overall since the release of the game, while reviews by critics have remained relatively consistent. This again raises the question of what is so different between a user's experience of the game versus a critic's experience. 
+
+# Rating Distributions
+
+In order to compare critic versus user reviews from a slightly different angle, I created boxplots representing the overall distributions of scores.
+
 ```{r, echo = FALSE}
 critic2 <- critic %>% 
   mutate(grade_out_of_10 = grade/10)
@@ -52,4 +68,38 @@ ggplot(user_reviews, aes(y = grade)) +
    
 ```
 
+Consistent with the line graph, the median grade given by users appears to be almost 7 points lower than that given by critics, and this is an enormous difference on a 10 point scale! Furthermore, the scores given by users were much more widely spread out than those given by critics. This aspect makes sense given that critics generally approach their reviews with set criteria that is somewhat accepted among critics, so they are likely to reach similar conclusions, wheras users are reviewing the game based on their own very different priorities and preferences. 
+
+Another notable aspect of these plots is that the plot of users' scores has no "whiskers" or outliers, indicating that the minimum score (0) is also the first quartile, and the maximum score (10) is also the third quartile. This likely reflects the fact that users are more likely to review something if they have a strong (positive or negative) opinion about it, so a substantial number of users rated the game a 0 out of 10, but a substantial number also rated the game a 10/10. This effect would not apply to critics because critics are asked by companies to review certain games-- they do not choose which games to review based on how much they like the games. This could be a possible explanation of the large disparity between user reviews and critic reviews. In general, users are more likely to review a product if they have a strong opinion about it at either extreme, but they may be even more inclined to review the game if their strong opinion is negative. If this is the case, the user reviews may not provide an accurate representation of overall user satisfaction. 
+
+On the other hand, I am not an expert on how video game criticism works, but I believe critics are paid by the distributer of the game to review it. Thus, it seems that they may be more inclined to give a positive review so that they have a higher chance of being hired again by the same distributer, in which case critic reviews may also be a misleading measure of the overall quality of the game. 
+
+So, is Animal Crossing New Horizons worth buying? According to wikipedia, the game broke the console game record for most digital units sold in a month, having sold 5 million digital copies within the first month of being released ^[https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons]. Plus, the median review by critics is a 9/10, which is pretty darn good. Based on these numbers, the verdict seems like a no brainer. The one piece of the puzzle that doesn't fit is that the median user review is less than a 2.5 out of 10. Based, on that number alone, it would seem obvious that the game was terrible! I have explored some possible reasoning for this seemingly paradoxical disparity, but the definitive reason is still a mystery. 
+
+# Text Analysis
+
+```{r}
+# Text Analysis
+
+library(tidytext)
+library(wordcloud)
+
+critic_text <- critic %>% 
+  select(text) %>% 
+  unnest_tokens(word, text) %>% 
+  anti_join(stop_words) %>% 
+  count(word, sort = TRUE)
+  
+critic_text %>% 
+  with(wordcloud(word, n, max.words = 50))
+
+user_text <- user_reviews %>% 
+  select(text) %>% 
+  unnest_tokens(word, text) %>% 
+  anti_join(stop_words) %>% 
+  count(word, sort = TRUE)
+
+user_text %>% 
+  with(wordcloud(word, n, max.words = 50))
+```
 
