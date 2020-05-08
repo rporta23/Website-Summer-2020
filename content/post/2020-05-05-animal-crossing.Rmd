@@ -20,7 +20,7 @@ library(tidyverse)
 
 Animal Crossing is a Nintendo video game, and the latest version, Animal Crossing New Horizons, released on March 20th 2020 is the latest trend among gamers. It is an open-ended simulation game where the goal is to create a community of anthropomorphic animals on a deserted island. If you want to learn more about it, the wikipedia page is [here](https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons) ^[https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons]. 
 
-The #TidyTuesday data this week contains information about Animal Crossing reviews by both critics and consumers ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md]. The data contains a numerical score associated with each review as well as the qualitative text review. 
+The #TidyTuesday data this week contains information about Animal Crossing reviews by both critics and consumers ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-05/readme.md] ^[https://github.com/jefflomacy/villagerdb]. The data contains a numerical score associated with each review as well as the qualitative text review. 
 
 # Trends in Reviews Over Time: Critics Versus Users
 
