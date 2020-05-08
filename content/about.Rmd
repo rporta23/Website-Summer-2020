@@ -15,6 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
  
 # Contact Info
 
-rporta@smith.edu
+email: rporta@smith.edu
+
+twitter: @porta_rose
  
 

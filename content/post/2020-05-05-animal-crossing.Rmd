@@ -176,3 +176,4 @@ Overall, it still puzzles me why the critics and the users would have such drast
 
 That's it for this post! Stay tuned for next week!
 
+The code used to generate this post is [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-05-05-animal-crossing.Rmd).
