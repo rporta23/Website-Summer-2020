@@ -1,0 +1,34 @@
+---
+title: Volcano Eruptions
+author: Rose Porta
+date: '2020-05-11'
+slug: volcano-erruptions
+categories: []
+tags: []
+runtime: shiny
+output: html_document
+draft: true
+---
+
+This week the #TidyTuesday data included information about volcanic eruptions over time including the names of the volcanos, the dates of all eruptions between 11345 B.C.E and 2020 C.E., the location of each eruption, the type of each volcano, the elevation of each volcano, the population within 10, 30, and 100km of each volcano, the primary rock composition of each volcano, the degree of certainty that each eruption occurred, and more ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-12/readme.md] ^[https://www.himalayandatabase.com/].
+
+I used this data to create a fun shiny app where users can explore each of these variables in relation to volcanic eruptions over time using an interactive map ^[https://rporta.shinyapps.io/volcanos/]. 
+
+This was my first shiny app, so it definitely involved a learning curve, but the [Shiny from R Studio](https://shiny.rstudio.com/) website was a very helpful resource to get me started ^[https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/] ^[https://shiny.rstudio.com/articles/build.html]. [This blog post](https://www.statsandr.com/blog/how-to-embed-a-shiny-app-in-blogdown/) by Antoine Soetewey was very helpful in learning how to embed a shiny app into an R blogdown post. 
+
+I used the maps package^[Original S code by Richard A. Becker, Allan R. Wilks. R version
+  by Ray Brownrigg. Enhancements by Thomas P Minka and Alex
+  Deckmyn. (2018). maps: Draw Geographical Maps. R package
+  version 3.3.0. https://CRAN.R-project.org/package=maps] and the ggmap package^[D. Kahle and H. Wickham. ggmap: Spatial Visualization with
+  ggplot2. The R Journal, 5(1), 144-161. URL
+  http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf] to create the world map. 
+  
+Have fun and explore the app below!
+
+<iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/volcanos/"> </iframe
+
+The code used to create the shiny app is [here].
+
+# References
+
+

@@ -6,10 +6,19 @@
     <description>Recent content on Rose Porta</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 11 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Volcano Eruptions</title>
+      <link>/2020/05/11/volcano-erruptions/</link>
+      <pubDate>Mon, 11 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/05/11/volcano-erruptions/</guid>
+      <description>This week the #TidyTuesday data included information about volcanic eruptions over time including the names of the volcanos, the dates of all eruptions between 11345 B.C.E and 2020 C.E., the location of each eruption, the type of each volcano, the elevation of each volcano, the population within 10, 30, and 100km of each volcano, the primary rock composition of each volcano, the degree of certainty that each eruption occurred, and more 1 2.</description>
+    </item>
     
     <item>
       <title>Animal Crossing</title>
