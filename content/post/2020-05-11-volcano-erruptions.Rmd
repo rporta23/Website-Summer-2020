@@ -25,9 +25,11 @@ I used the maps package^[Original S code by Richard A. Becker, Allan R. Wilks. R
   
 Have fun and explore the app below!
 
-<iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/volcanos/"> </iframe
+<iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/volcanos/"> </iframe>
 
-The code used to create the shiny app is [here].
+The code used to create the shiny app is [here](https://github.com/rporta23/Volcanic-Eruptions-Shiny-App/blob/master/app.R).
+
+The code used to generate this post is [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-05-11-volcano-erruptions.Rmd).
 
 # References
 
