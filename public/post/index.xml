@@ -6,18 +6,20 @@
     <description>Recent content in Posts on Rose Porta</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 11 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Volcano Eruptions</title>
-      <link>/2020/05/11/volcano-erruptions/</link>
-      <pubDate>Mon, 11 May 2020 00:00:00 +0000</pubDate>
+      <link>/2020/05/13/volcano-erruptions/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/05/11/volcano-erruptions/</guid>
-      <description>This week the #TidyTuesday data included information about volcanic eruptions over time including the names of the volcanos, the dates of all eruptions between 11345 B.C.E and 2020 C.E., the location of each eruption, the type of each volcano, the elevation of each volcano, the population within 10, 30, and 100km of each volcano, the primary rock composition of each volcano, the degree of certainty that each eruption occurred, and more 1 2.</description>
+      <guid>/2020/05/13/volcano-erruptions/</guid>
+      <description>1
+Volcanic eruptions are incredible geological phenomena, but they can also cause significant damage to the environment and surrounding populations. According to wikipedia, a volcanic eruption occurs when a crack in Earth’s crust allows hot lava, volcanic ash, and gases to escape from below the surface 2.
+This week the #TidyTuesday data includes information about volcanic eruptions over time including the names of the volcanos, the dates of all eruptions between 11345 B.</description>
     </item>
     
     <item>

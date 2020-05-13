@@ -1,21 +1,26 @@
 ---
 title: Volcano Eruptions
 author: Rose Porta
-date: '2020-05-11'
+date: '2020-05-13'
 slug: volcano-erruptions
 categories: []
 tags: []
 runtime: shiny
 output: html_document
-draft: true
+draft: false
 ---
 
 
 
-<p>This week the #TidyTuesday data included information about volcanic eruptions over time including the names of the volcanos, the dates of all eruptions between 11345 B.C.E and 2020 C.E., the location of each eruption, the type of each volcano, the elevation of each volcano, the population within 10, 30, and 100km of each volcano, the primary rock composition of each volcano, the degree of certainty that each eruption occurred, and more <a href="#section-fn1" class="footnote-ref" id="section-fnref1"><sup>1</sup></a> <a href="#section-fn2" class="footnote-ref" id="section-fnref2"><sup>2</sup></a>.</p>
-<p>I used this data to create a fun shiny app where users can explore each of these variables in relation to volcanic eruptions over time using an interactive map <a href="#section-fn3" class="footnote-ref" id="section-fnref3"><sup>3</sup></a>.</p>
-<p>This was my first shiny app, so it definitely involved a learning curve, but the <a href="https://shiny.rstudio.com/">Shiny from R Studio</a> website was a very helpful resource to get me started <a href="#section-fn4" class="footnote-ref" id="section-fnref4"><sup>4</sup></a> <a href="#section-fn5" class="footnote-ref" id="section-fnref5"><sup>5</sup></a>. <a href="https://www.statsandr.com/blog/how-to-embed-a-shiny-app-in-blogdown/">This blog post</a> by Antoine Soetewey was very helpful in learning how to embed a shiny app into an R blogdown post.</p>
-<p>I used the maps package<a href="#section-fn6" class="footnote-ref" id="section-fnref6"><sup>6</sup></a> and the ggmap package<a href="#section-fn7" class="footnote-ref" id="section-fnref7"><sup>7</sup></a> to create the world map.</p>
+<p><img src="/post/2020-05-11-volcano-erruptions_files/volcano.jpg" width="300" height="300" />
+<a href="#section-fn1" class="footnote-ref" id="section-fnref1"><sup>1</sup></a></p>
+<p>Volcanic eruptions are incredible geological phenomena, but they can also
+cause significant damage to the environment and surrounding populations.
+According to wikipedia, a volcanic eruption occurs when a crack in Earth’s crust allows hot lava, volcanic ash, and gases to escape from below the surface <a href="#section-fn2" class="footnote-ref" id="section-fnref2"><sup>2</sup></a>.</p>
+<p>This week the #TidyTuesday data includes information about volcanic eruptions over time including the names of the volcanos, the dates of all eruptions between 11345 B.C.E and 2020 C.E., the location of each eruption, the type of each volcano, the elevation of each volcano, the population within 10, 30, and 100km of each volcano, the primary rock composition of each volcano, the degree of certainty that each eruption occurred, and more <a href="#section-fn3" class="footnote-ref" id="section-fnref3"><sup>3</sup></a> <a href="#section-fn4" class="footnote-ref" id="section-fnref4"><sup>4</sup></a>.</p>
+<p>I used this data to create a fun shiny app where users can explore each of these variables in relation to volcanic eruptions over time using an interactive map <a href="#section-fn5" class="footnote-ref" id="section-fnref5"><sup>5</sup></a>.</p>
+<p>This was my first shiny app, so it definitely involved a learning curve, but the <a href="https://shiny.rstudio.com/">Shiny from R Studio</a> website was a very helpful resource to get me started <a href="#section-fn6" class="footnote-ref" id="section-fnref6"><sup>6</sup></a> <a href="#section-fn7" class="footnote-ref" id="section-fnref7"><sup>7</sup></a>. <a href="https://www.statsandr.com/blog/how-to-embed-a-shiny-app-in-blogdown/">This blog post</a> by Antoine Soetewey was very helpful in learning how to embed a shiny app into an R blogdown post.</p>
+<p>I used the maps package<a href="#section-fn8" class="footnote-ref" id="section-fnref8"><sup>8</sup></a> and the ggmap package<a href="#section-fn9" class="footnote-ref" id="section-fnref9"><sup>9</sup></a> to create the world map.</p>
 <p>Have fun and explore the app below!</p>
 <iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/volcanos/">
 </iframe>
@@ -27,17 +32,19 @@ draft: true
 <div class="footnotes">
 <hr />
 <ol>
-<li id="section-fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-12/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-12/readme.md</a><a href="#section-fnref1" class="footnote-back">↩</a></p></li>
-<li id="section-fn2"><p><a href="https://www.himalayandatabase.com/" class="uri">https://www.himalayandatabase.com/</a><a href="#section-fnref2" class="footnote-back">↩</a></p></li>
-<li id="section-fn3"><p><a href="https://rporta.shinyapps.io/volcanos/" class="uri">https://rporta.shinyapps.io/volcanos/</a><a href="#section-fnref3" class="footnote-back">↩</a></p></li>
-<li id="section-fn4"><p><a href="https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/" class="uri">https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/</a><a href="#section-fnref4" class="footnote-back">↩</a></p></li>
-<li id="section-fn5"><p><a href="https://shiny.rstudio.com/articles/build.html" class="uri">https://shiny.rstudio.com/articles/build.html</a><a href="#section-fnref5" class="footnote-back">↩</a></p></li>
-<li id="section-fn6"><p>Original S code by Richard A. Becker, Allan R. Wilks. R version
+<li id="section-fn1"><p><a href="https://www.bbc.co.uk/bitesize/articles/zrj6gwx" class="uri">https://www.bbc.co.uk/bitesize/articles/zrj6gwx</a><a href="#section-fnref1" class="footnote-back">↩</a></p></li>
+<li id="section-fn2"><p><a href="https://en.wikipedia.org/wiki/Volcano" class="uri">https://en.wikipedia.org/wiki/Volcano</a><a href="#section-fnref2" class="footnote-back">↩</a></p></li>
+<li id="section-fn3"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-12/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-12/readme.md</a><a href="#section-fnref3" class="footnote-back">↩</a></p></li>
+<li id="section-fn4"><p><a href="https://www.himalayandatabase.com/" class="uri">https://www.himalayandatabase.com/</a><a href="#section-fnref4" class="footnote-back">↩</a></p></li>
+<li id="section-fn5"><p><a href="https://rporta.shinyapps.io/volcanos/" class="uri">https://rporta.shinyapps.io/volcanos/</a><a href="#section-fnref5" class="footnote-back">↩</a></p></li>
+<li id="section-fn6"><p><a href="https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/" class="uri">https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/</a><a href="#section-fnref6" class="footnote-back">↩</a></p></li>
+<li id="section-fn7"><p><a href="https://shiny.rstudio.com/articles/build.html" class="uri">https://shiny.rstudio.com/articles/build.html</a><a href="#section-fnref7" class="footnote-back">↩</a></p></li>
+<li id="section-fn8"><p>Original S code by Richard A. Becker, Allan R. Wilks. R version
 by Ray Brownrigg. Enhancements by Thomas P Minka and Alex
 Deckmyn. (2018). maps: Draw Geographical Maps. R package
-version 3.3.0. <a href="https://CRAN.R-project.org/package=maps" class="uri">https://CRAN.R-project.org/package=maps</a><a href="#section-fnref6" class="footnote-back">↩</a></p></li>
-<li id="section-fn7"><p>D. Kahle and H. Wickham. ggmap: Spatial Visualization with
+version 3.3.0. <a href="https://CRAN.R-project.org/package=maps" class="uri">https://CRAN.R-project.org/package=maps</a><a href="#section-fnref8" class="footnote-back">↩</a></p></li>
+<li id="section-fn9"><p>D. Kahle and H. Wickham. ggmap: Spatial Visualization with
 ggplot2. The R Journal, 5(1), 144-161. URL
-<a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a><a href="#section-fnref7" class="footnote-back">↩</a></p></li>
+<a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a><a href="#section-fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
