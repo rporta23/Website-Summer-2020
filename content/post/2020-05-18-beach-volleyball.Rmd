@@ -1,0 +1,246 @@
+---
+title: Beach Volleyball
+author: Rose Porta
+date: '2020-05-18'
+slug: beach-volleyball
+categories: []
+tags: []
+draft: true
+---
+
+```{r, echo = FALSE, include = FALSE}
+# Get the Data
+
+vb_matches <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-19/vb_matches.csv', guess_max = 76000)
+
+# load packages
+library(tidyverse)
+```
+
+```{r, echo = FALSE}
+# combine numbers from the two players on a team into one variable
+vb_matches_tidy <- vb_matches %>% 
+  mutate(w_attacks = w_p1_tot_attacks + w_p2_tot_attacks,
+         w_kills = w_p1_tot_kills + w_p1_tot_kills,
+         w_errors = w_p1_tot_errors + w_p2_tot_errors,
+         w_aces = w_p1_tot_aces + w_p2_tot_aces,
+         w_serve_errors = w_p1_tot_serve_errors + w_p1_tot_serve_errors,
+         w_blocks = w_p1_tot_blocks + w_p1_tot_blocks,
+         w_digs = w_p1_tot_digs + w_p2_tot_digs,
+         l_attacks = l_p1_tot_attacks + l_p2_tot_attacks,
+         l_kills = l_p1_tot_kills + l_p1_tot_kills,
+         l_errors = l_p1_tot_errors + l_p2_tot_errors,
+         l_aces = l_p1_tot_aces + l_p2_tot_aces,
+         l_serve_errors = l_p1_tot_serve_errors + l_p1_tot_serve_errors,
+         l_blocks = l_p1_tot_blocks + l_p1_tot_blocks,
+         l_digs = l_p1_tot_digs + l_p2_tot_digs,
+         ) %>% 
+  select(date, match_num, w_attacks, l_attacks, w_kills, l_kills, w_errors, l_errors, w_aces, l_aces, w_serve_errors, l_serve_errors, w_blocks, l_blocks, w_digs, l_digs
+         )
+
+# convert to long format
+vb_matches_tidy2 <- vb_matches_tidy %>% 
+  pivot_longer(names_to = "win", 
+               values_to = "values",
+               cols = c(-date, -match_num)
+               ) 
+```
+Beach volleyball is a team sport very similar to indoor volleyball, except it is normally played on the beach. The goal is to hit the ball over the net and onto the ground on the other team's side of the net. Both men and women can play beach volleyball at a professional level. 
+
+This week's #TidyTuesday data contains information about the winning and losing team's players and plays for matches played in the The FIVB Beach Volleyball World Tour (international) and for tours organized by the Association of Volleyball Professionals (AVP, U.S. only) ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-19/readme.md] ^[https://bigtimestats.blog/data/]. It contains the numbers of attacks, kills, aces, blocks, digs, errors, and serve errors. Detailed explanations about each of these plays can be found on the [beach volleyball wikipedia page](https://en.wikipedia.org/wiki/Beach_volleyball#Skills) ^[https://en.wikipedia.org/wiki/Beach_volleyball#Skills].
+
+# What is the Best Strategy to Win?
+
+In order to analyze which plays or strategies are most useful to win the game, I analyzed the distributions of the frequency of each play for winning teams versus losing teams. I decided to try out using density plots using geom_density() in order to analyze these distributions.
+
+## Kills
+In beach volleyball, a kill is any play that results in a legal point being scored ^[https://en.wikipedia.org/wiki/Volleyball_jargon]. 
+
+The distribution of kills for winning and losing teams are roughly the same shape, but the distribution for winning teams is noticably shifted to the right of the distribution for losing teams. This makes sense because in order for a team to win, they must score more points than the other team, thus winning teams would have more overall kills than losing teams. 
+
+```{r, echo = FALSE}
+# kills
+vb_matches_tidy4 <- vb_matches_tidy2 %>% 
+  filter(win == "w_kills" | win == "l_kills") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_kills", "Winning Team", "Losing Team"))
+
+ggplot(vb_matches_tidy4, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Distribution of Kills for Winning Versus Losing Teams",
+       x = "Number of Kills",
+       y = "Density")
+
+```
+
+## Attacks
+
+An attack is one type of play that can be used to get a kill. Any offensive attempt to score a point is categorized as an attack. 
+
+Thus, it somewhat makes sense that the distributions of attacks for winning and losing teams are almost identical because unless the ball hits the net or goes out of bounds, an attack occurs almost every time the ball goes from one side of the net to the other. The median number of attacks for the losing team seems to be slightly higher than that of the winning team, suggesting that the losing team generally makes slightly more attacks, but their attacks are less successful in winning a point than those of the winning team overall, as shown by the distributions of kills above. 
+
+This could indicate that focusing on being good at defending against attacks may be a better strategy for winning than focusing on being good at making attacks.
+
+```{r, echo = FALSE}
+# filter to only focus on attacks
+vb_matches_tidy3 <- vb_matches_tidy2 %>% 
+  filter(win == "w_attacks" | win == "l_attacks") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_attacks", "Winning Team", "Losing Team"))
+
+# create boxplots showing distribution of attacks for winners versus losers
+ggplot(vb_matches_tidy3, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) + 
+  labs(
+    title = "Distribution of Attacks for Winning Versus Losing Teams",
+       x = "Number of Attacks",
+       y = "Density")
+```
+
+# Aces
+
+An ace is a serve where the ball hits the ground on the other side of the net without the defending team having touched it ^[https://www.fivb.org/EN/BeachVolleyball/Glossary.asp].
+
+The distributions of aces clearly show that losing teams score fewer aces than winning teams overall. Thus, it seems like a good strategy to focus on scoring aces.
+
+```{r, echo = FALSE}
+# aces
+vb_matches_tidy6 <- vb_matches_tidy2 %>% 
+  filter(win == "w_aces" | win == "l_aces") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_aces", "Winning Team", "Losing Team"))
+
+ggplot(vb_matches_tidy6, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Distribution of Aces for Winning Versus Losing Teams",
+       x = "Number of Aces",
+       y = "Density")
+```
+
+# Blocks
+
+A block is when a player reaches over the net to intercept a ball coming from the other side and directs the ball back onto the opponent's side ^[https://en.wikipedia.org/wiki/Beach_volleyball#Attack].
+
+The distributions for blocks look very similar to those for aces, suggesting that blocks are also a good strategy for winning. 
+
+```{r, echo = FALSE}
+# blocks
+vb_matches_tidy8 <- vb_matches_tidy2 %>% 
+  filter(win == "w_blocks" | win == "l_blocks") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_blocks", "Winning Team", "Losing Team"))
+
+ggplot(vb_matches_tidy8, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Distribution of Blocks for Winning Versus Losing Teams",
+       x = "Number of Blocks",
+       y = "Density")
+```
+
+## Digs
+
+A dig is when the ball is saved from hitting the ground by any part of the body^[https://www.fivb.org/EN/BeachVolleyball/Glossary.asp]. 
+
+The distribution of digs for winning teams is clearly shifted to the right of that for losing teams, indicating that winning teams use more digs than losing teams overall. This suggests that in addition to blocks and aces, digs may be a useful skill to focus on when developing beach volleyball strategy. 
+
+```{r, echo = FALSE}
+# digs
+vb_matches_tidy9 <- vb_matches_tidy2 %>% 
+  filter(win == "w_digs" | win == "l_digs") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_digs", "Winning Team", "Losing Team"))
+
+ggplot(vb_matches_tidy9, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Distribution of Digs for Winning Versus Losing Teams",
+       x = "Number of Digs",
+       y = "Density")
+```
+
+## Errors
+
+An error is any play that is illegal, goes out of bounds, or hits the net. 
+
+It is no surprise that losing teams clearly have more errors overall than winning teams. 
+
+```{r, echo = FALSE}
+# errors
+vb_matches_tidy5 <- vb_matches_tidy2 %>% 
+  filter(win == "w_errors" | win == "l_errors") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_errors", "Winning Team", "Losing Team"))
+
+ggplot(vb_matches_tidy5, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Distribution of Errors for Winning Versus Losing Teams",
+       x = "Number of Errors",
+       y = "Density")
+```
+
+# Serve Errors
+
+A serve error is simply an unsuccessful serve (hits the net, goes out of bounds, etc.). 
+
+Based on this graph, the distributions of serve errors for winning and losing teams appear to be almost exactly identical, which may seem surprising at first glance. However, [this FiveThirtyEight article](https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/) explains that in beach volleyball, the team that serves is actually very unlikely to win the point regardless of whether or not the serve is successful, so serve errors are not very likely to impact whether or not a team wins ^[https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/]. 
+
+This suggests that teams should not focus on serving technique as a primary strategy for winning, with the exception that if a team is able to score a high number of aces when serving, they may be more likely to win. 
+```{r, echo = FALSE}
+# serve errors
+vb_matches_tidy7 <- vb_matches_tidy2 %>% 
+  filter(win == "w_serve_errors" | win == "l_serve_errors") %>% 
+  filter(values != "NA") %>% 
+  mutate(win = ifelse(win == "w_serve_errors", "Winning Team", "Losing Team"))
+
+ggplot(vb_matches_tidy7, aes(x = values, fill = win)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Distribution of Serve Errors for Winning Versus Losing Teams",
+       x = "Number of Serve Errors",
+       y = "Density")
+```
+
+# Summary
+
+To put this into perspective, I created a barplot below showing the proportion of total plays (over all matches) each individual play represented for winning versus losing teams.  
+
+```{r, echo = FALSE}
+vb_matches_grouped <- vb_matches_tidy2 %>% 
+  filter(values != "NA") %>% 
+  mutate(win1 = ifelse(win == "w_attacks" | win == "w_kills" | win == "w_errors" | win == "w_aces" | win == "w_serve_errors" | win == "w_blocks" | win == "w_digs", "Win", "Lose")
+         ) %>% 
+  group_by(win1) %>% 
+  mutate(total = sum(values)) %>% 
+  group_by(win) %>% 
+  mutate(sum = sum(values), prop = sum/total) %>% 
+  mutate(play = ifelse(win == "w_attacks" | win == "l_attacks", "attacks", 
+                       ifelse(win == "w_kills" | win == "l_kills", "kills",
+                              ifelse(win == "w_errors" | win == "l_errors", "errors",
+                                     ifelse(win == "w_aces" | win == "l_aces", "aces",
+                                            ifelse(win == "w_serve_errors" | win == "l_serve_errors", "serve_errors",
+                                                   ifelse(win == "w_blocks" | win == "l_blocks", "blocks", "digs"
+                                                          )
+                                                   )
+                                            )
+                                     )
+                              )
+                       )
+         )
+                                          
+  
+
+ggplot(vb_matches_grouped, aes(x = play, y = prop, fill = win1)) +
+  geom_col(position = "dodge") +
+  coord_flip() + 
+  labs(title = "Proportions of Each Play out of Total Plays",
+       subtitle = "winners versus losers",
+       x = "Proportion",
+       y = "Play",
+       fill = "Win")
+```
+
+Although the proportions are not drastically different, this plot suggests the general conclusion that it may be more useful for teams to focus on defensive strategies such as digs and blocks rather than offensive attacks, as the winning teams clearly have more digs and blocks, while the losing teams have slightly more attacks (as a proportion of total plays).
+
+However, attacks make up the vast majority of plays for both winning and losing teams, suggesting that it may be beneficial for teams to focus on the quality of their attacks rather than the quantity. It appears that making a greater number of attacks in a game may actually hurt a team, and rather it should be the focus to maximize the chance that when a player makes an attack, it results in a kill.
+
+Conversely, since blocks and aces are such small percentages of the total plays for both winning and losing teams, this suggest that it may not be useful to focus too much on these strategies because they may be very difficult to achieve, and it may be partly luck when they happen.
+
+I am by no means a beach volleyball expert, and my knowledge of volleyball in general is limited to what I learned in high school/ middle school P.E. and the looking up definitions of terms that I did for this blog post. That being said, I may be missing some context, and you should take my strategy advice with a grain of salt.
