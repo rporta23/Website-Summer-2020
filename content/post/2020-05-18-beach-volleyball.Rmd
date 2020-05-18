@@ -244,3 +244,5 @@ However, attacks make up the vast majority of plays for both winning and losing 
 Conversely, since blocks and aces are such small percentages of the total plays for both winning and losing teams, this suggest that it may not be useful to focus too much on these strategies because they may be very difficult to achieve, and it may be partly luck when they happen.
 
 I am by no means a beach volleyball expert, and my knowledge of volleyball in general is limited to what I learned in high school/ middle school P.E. and the looking up definitions of terms that I did for this blog post. That being said, I may be missing some context, and you should take my strategy advice with a grain of salt.
+
+The code used to generate this post is [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-05-18-beach-volleyball.Rmd).
