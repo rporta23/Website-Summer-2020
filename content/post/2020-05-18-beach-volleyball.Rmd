@@ -5,8 +5,11 @@ date: '2020-05-18'
 slug: beach-volleyball
 categories: []
 tags: []
-draft: true
+draft: false
 ---
+
+![](/post/2020-05-18-beach-volleyball_files/beach volleyball.jpg){width=300px height=300px}
+^[https://www.britannica.com/sports/beach-volleyball]
 
 ```{r, echo = FALSE, include = FALSE}
 # Get the Data
@@ -36,10 +39,8 @@ vb_matches_tidy <- vb_matches %>%
          l_digs = l_p1_tot_digs + l_p2_tot_digs,
          ) %>% 
   select(date, match_num, w_attacks, l_attacks, w_kills, l_kills, w_errors, l_errors, w_aces, l_aces, w_serve_errors, l_serve_errors, w_blocks, l_blocks, w_digs, l_digs
-         )
-
-# convert to long format
-vb_matches_tidy2 <- vb_matches_tidy %>% 
+         ) %>% 
+  # convert to long format
   pivot_longer(names_to = "win", 
                values_to = "values",
                cols = c(-date, -match_num)
@@ -60,12 +61,13 @@ Clearly, the entire distribution of kills for winning teams is noticably shifted
 
 ```{r, echo = FALSE}
 # kills
-vb_matches_tidy4 <- vb_matches_tidy2 %>% 
+vb_matches_kills <- vb_matches_tidy %>% 
   filter(win == "w_kills" | win == "l_kills") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_kills", "Winning Team", "Losing Team"))
 
-ggplot(vb_matches_tidy4, aes(x = values, fill = win)) +
+# create density plot of kills for winning versus losing teams
+ggplot(vb_matches_kills, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Kills for Winning Versus Losing Teams",
@@ -83,14 +85,13 @@ Thus, it somewhat makes sense that the distributions of attacks for winning and 
 This could indicate that focusing on being good at defending against attacks may be a better strategy for winning than focusing on being good at making attacks.
 
 ```{r, echo = FALSE}
-# filter to only focus on attacks
-vb_matches_tidy3 <- vb_matches_tidy2 %>% 
+# attacks
+vb_matches_attacks <- vb_matches_tidy %>% 
   filter(win == "w_attacks" | win == "l_attacks") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_attacks", "Winning Team", "Losing Team"))
 
-# create boxplots showing distribution of attacks for winners versus losers
-ggplot(vb_matches_tidy3, aes(x = values, fill = win)) +
+ggplot(vb_matches_attacks, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(
@@ -107,12 +108,12 @@ The distributions of aces clearly show that losing teams score fewer aces than w
 
 ```{r, echo = FALSE}
 # aces
-vb_matches_tidy6 <- vb_matches_tidy2 %>% 
+vb_matches_aces <- vb_matches_tidy %>% 
   filter(win == "w_aces" | win == "l_aces") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_aces", "Winning Team", "Losing Team"))
 
-ggplot(vb_matches_tidy6, aes(x = values, fill = win)) +
+ggplot(vb_matches_aces, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Aces for Winning Versus Losing Teams",
@@ -128,12 +129,12 @@ The distributions for blocks look very similar to those for aces, suggesting tha
 
 ```{r, echo = FALSE}
 # blocks
-vb_matches_tidy8 <- vb_matches_tidy2 %>% 
+vb_matches_blocks <- vb_matches_tidy %>% 
   filter(win == "w_blocks" | win == "l_blocks") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_blocks", "Winning Team", "Losing Team"))
 
-ggplot(vb_matches_tidy8, aes(x = values, fill = win)) +
+ggplot(vb_matches_blocks, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Blocks for Winning Versus Losing Teams",
@@ -149,12 +150,12 @@ The distribution of digs for winning teams is clearly shifted to the right of th
 
 ```{r, echo = FALSE}
 # digs
-vb_matches_tidy9 <- vb_matches_tidy2 %>% 
+vb_matches_digs <- vb_matches_tidy %>% 
   filter(win == "w_digs" | win == "l_digs") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_digs", "Winning Team", "Losing Team"))
 
-ggplot(vb_matches_tidy9, aes(x = values, fill = win)) +
+ggplot(vb_matches_digs, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Digs for Winning Versus Losing Teams",
@@ -170,12 +171,12 @@ It is no surprise that losing teams clearly have more errors overall than winnin
 
 ```{r, echo = FALSE}
 # errors
-vb_matches_tidy5 <- vb_matches_tidy2 %>% 
+vb_matches_errors <- vb_matches_tidy %>% 
   filter(win == "w_errors" | win == "l_errors") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_errors", "Winning Team", "Losing Team"))
 
-ggplot(vb_matches_tidy5, aes(x = values, fill = win)) +
+ggplot(vb_matches_errors, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Errors for Winning Versus Losing Teams",
@@ -192,12 +193,12 @@ Based on this graph, the distributions of serve errors for winning and losing te
 This suggests that teams should not focus on serving technique as a primary strategy for winning, with the exception that if a team is able to score a high number of aces when serving, they may be more likely to win. 
 ```{r, echo = FALSE}
 # serve errors
-vb_matches_tidy7 <- vb_matches_tidy2 %>% 
+vb_matches_serve_errors <- vb_matches_tidy %>% 
   filter(win == "w_serve_errors" | win == "l_serve_errors") %>% 
   filter(values != "NA") %>% 
   mutate(win = ifelse(win == "w_serve_errors", "Winning Team", "Losing Team"))
 
-ggplot(vb_matches_tidy7, aes(x = values, fill = win)) +
+ggplot(vb_matches_serve_errors, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
   scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Serve Errors for Winning Versus Losing Teams",
@@ -211,7 +212,7 @@ To put this into perspective, I created a barplot below showing the proportion o
 
 ```{r, echo = FALSE}
 # calculate proportions for bar plot
-vb_matches_grouped <- vb_matches_tidy2 %>% 
+vb_matches_grouped <- vb_matches_tidy %>% 
   filter(values != "NA") %>% 
   # create binary win/lose variable win1
   mutate(win1 = ifelse(win == "w_attacks" | win == "w_kills" | win == "w_errors" | win == "w_aces" | win == "w_serve_errors" | win == "w_blocks" | win == "w_digs", "Win", "Lose")

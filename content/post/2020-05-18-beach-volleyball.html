@@ -5,19 +5,21 @@ date: '2020-05-18'
 slug: beach-volleyball
 categories: []
 tags: []
-draft: true
+draft: false
 ---
 
 
 
+<p><img src="/post/2020-05-18-beach-volleyball_files/beach%20volleyball.jpg" width="300" height="300" />
+<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p>Beach volleyball is a team sport very similar to indoor volleyball, except it is normally played on the beach. The goal is to hit the ball over the net and onto the ground on the other team’s side of the net. Both men and women can play beach volleyball at a professional level.</p>
-<p>This week’s #TidyTuesday data contains information about the winning and losing team’s players and plays for matches played in the The FIVB Beach Volleyball World Tour (international) and for tours organized by the Association of Volleyball Professionals (AVP, U.S. only) <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. It contains the numbers of attacks, kills, aces, blocks, digs, errors, and serve errors. Detailed explanations about each of these plays can be found on the <a href="https://en.wikipedia.org/wiki/Beach_volleyball#Skills">beach volleyball wikipedia page</a> <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<p>This week’s #TidyTuesday data contains information about the winning and losing team’s players and plays for matches played in the The FIVB Beach Volleyball World Tour (international) and for tours organized by the Association of Volleyball Professionals (AVP, U.S. only) <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. It contains the numbers of attacks, kills, aces, blocks, digs, errors, and serve errors. Detailed explanations about each of these plays can be found on the <a href="https://en.wikipedia.org/wiki/Beach_volleyball#Skills">beach volleyball wikipedia page</a> <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</p>
 <div id="what-is-the-best-strategy-to-win" class="section level1">
 <h1>What is the Best Strategy to Win?</h1>
 <p>In order to analyze which plays or strategies are most useful to win the game, I analyzed the distributions of the frequency of each play for winning teams versus losing teams. I decided to try out using density plots using geom_density() in order to analyze these distributions.</p>
 <div id="kills" class="section level2">
 <h2>Kills</h2>
-<p>In beach volleyball, a kill is any play that results in a legal point being scored <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</p>
+<p>In beach volleyball, a kill is any play that results in a legal point being scored <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
 <p>Clearly, the entire distribution of kills for winning teams is noticably shifted to the right compared to the distribution for losing teams, which makes sense because each winning team would need to have more kills than their opposing team in order to win the game. It is also notable that the curve of the distribution for the winning teams is more narrow (appearing to have a smaller standard error than the distribution for losing teams), indicating that winning teams score a high number of kills (around median of approximately 30) fairly consistantly, whereas the number of kills the losing team scores is more variable in general.</p>
 <p><img src="/post/2020-05-18-beach-volleyball_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
@@ -31,18 +33,18 @@ draft: true
 </div>
 <div id="aces" class="section level1">
 <h1>Aces</h1>
-<p>An ace is a serve where the ball hits the ground on the other side of the net without the defending team having touched it <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
+<p>An ace is a serve where the ball hits the ground on the other side of the net without the defending team having touched it <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
 <p>The distributions of aces clearly show that losing teams score fewer aces than winning teams overall. Thus, it seems like a good strategy to focus on scoring aces.</p>
 <p><img src="/post/2020-05-18-beach-volleyball_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="blocks" class="section level1">
 <h1>Blocks</h1>
-<p>A block is when a player reaches over the net to intercept a ball coming from the other side and directs the ball back onto the opponent’s side <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
+<p>A block is when a player reaches over the net to intercept a ball coming from the other side and directs the ball back onto the opponent’s side <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
 <p>The distributions for blocks look very similar to those for aces, suggesting that blocks are also a good strategy for winning.</p>
 <p><img src="/post/2020-05-18-beach-volleyball_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <div id="digs" class="section level2">
 <h2>Digs</h2>
-<p>A dig is when the ball is saved from hitting the ground by any part of the body<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
+<p>A dig is when the ball is saved from hitting the ground by any part of the body<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>.</p>
 <p>The distribution of digs for winning teams is clearly shifted to the right of that for losing teams, indicating that winning teams use more digs than losing teams overall. This suggests that in addition to blocks and aces, digs may be a useful skill to focus on when developing beach volleyball strategy.</p>
 <p><img src="/post/2020-05-18-beach-volleyball_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
@@ -56,7 +58,7 @@ draft: true
 <div id="serve-errors" class="section level1">
 <h1>Serve Errors</h1>
 <p>A serve error is simply an unsuccessful serve (hits the net, goes out of bounds, etc.).</p>
-<p>Based on this graph, the distributions of serve errors for winning and losing teams appear to be almost exactly identical, which may seem surprising at first glance. However, <a href="https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/">this FiveThirtyEight article</a> explains that in beach volleyball, the team that serves is actually very unlikely to win the point regardless of whether or not the serve is successful, so serve errors are not very likely to impact whether or not a team wins <a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>.</p>
+<p>Based on this graph, the distributions of serve errors for winning and losing teams appear to be almost exactly identical, which may seem surprising at first glance. However, <a href="https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/">this FiveThirtyEight article</a> explains that in beach volleyball, the team that serves is actually very unlikely to win the point regardless of whether or not the serve is successful, so serve errors are not very likely to impact whether or not a team wins <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>.</p>
 <p>This suggests that teams should not focus on serving technique as a primary strategy for winning, with the exception that if a team is able to score a high number of aces when serving, they may be more likely to win.
 <img src="/post/2020-05-18-beach-volleyball_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
@@ -73,13 +75,14 @@ draft: true
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-19/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-19/readme.md</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p><a href="https://bigtimestats.blog/data/" class="uri">https://bigtimestats.blog/data/</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p><a href="https://en.wikipedia.org/wiki/Beach_volleyball#Skills" class="uri">https://en.wikipedia.org/wiki/Beach_volleyball#Skills</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/Volleyball_jargon" class="uri">https://en.wikipedia.org/wiki/Volleyball_jargon</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p><a href="https://www.fivb.org/EN/BeachVolleyball/Glossary.asp" class="uri">https://www.fivb.org/EN/BeachVolleyball/Glossary.asp</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p><a href="https://en.wikipedia.org/wiki/Beach_volleyball#Attack" class="uri">https://en.wikipedia.org/wiki/Beach_volleyball#Attack</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p><a href="https://www.fivb.org/EN/BeachVolleyball/Glossary.asp" class="uri">https://www.fivb.org/EN/BeachVolleyball/Glossary.asp</a><a href="#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p><a href="https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/" class="uri">https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/</a><a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p><a href="https://www.britannica.com/sports/beach-volleyball" class="uri">https://www.britannica.com/sports/beach-volleyball</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-19/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-19/readme.md</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://bigtimestats.blog/data/" class="uri">https://bigtimestats.blog/data/</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/Beach_volleyball#Skills" class="uri">https://en.wikipedia.org/wiki/Beach_volleyball#Skills</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><a href="https://en.wikipedia.org/wiki/Volleyball_jargon" class="uri">https://en.wikipedia.org/wiki/Volleyball_jargon</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p><a href="https://www.fivb.org/EN/BeachVolleyball/Glossary.asp" class="uri">https://www.fivb.org/EN/BeachVolleyball/Glossary.asp</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p><a href="https://en.wikipedia.org/wiki/Beach_volleyball#Attack" class="uri">https://en.wikipedia.org/wiki/Beach_volleyball#Attack</a><a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p><a href="https://www.fivb.org/EN/BeachVolleyball/Glossary.asp" class="uri">https://www.fivb.org/EN/BeachVolleyball/Glossary.asp</a><a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p><a href="https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/" class="uri">https://fivethirtyeight.com/features/serving-is-a-disadvantage-in-some-olympic-sports/</a><a href="#fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
