@@ -21,18 +21,18 @@ library(tidyverse)
 # combine numbers from the two players on a team into one variable
 vb_matches_tidy <- vb_matches %>% 
   mutate(w_attacks = w_p1_tot_attacks + w_p2_tot_attacks,
-         w_kills = w_p1_tot_kills + w_p1_tot_kills,
+         w_kills = w_p1_tot_kills + w_p2_tot_kills,
          w_errors = w_p1_tot_errors + w_p2_tot_errors,
          w_aces = w_p1_tot_aces + w_p2_tot_aces,
-         w_serve_errors = w_p1_tot_serve_errors + w_p1_tot_serve_errors,
-         w_blocks = w_p1_tot_blocks + w_p1_tot_blocks,
+         w_serve_errors = w_p1_tot_serve_errors + w_p2_tot_serve_errors,
+         w_blocks = w_p1_tot_blocks + w_p2_tot_blocks,
          w_digs = w_p1_tot_digs + w_p2_tot_digs,
          l_attacks = l_p1_tot_attacks + l_p2_tot_attacks,
-         l_kills = l_p1_tot_kills + l_p1_tot_kills,
+         l_kills = l_p1_tot_kills + l_p2_tot_kills,
          l_errors = l_p1_tot_errors + l_p2_tot_errors,
          l_aces = l_p1_tot_aces + l_p2_tot_aces,
-         l_serve_errors = l_p1_tot_serve_errors + l_p1_tot_serve_errors,
-         l_blocks = l_p1_tot_blocks + l_p1_tot_blocks,
+         l_serve_errors = l_p1_tot_serve_errors + l_p2_tot_serve_errors,
+         l_blocks = l_p1_tot_blocks + l_p2_tot_blocks,
          l_digs = l_p1_tot_digs + l_p2_tot_digs,
          ) %>% 
   select(date, match_num, w_attacks, l_attacks, w_kills, l_kills, w_errors, l_errors, w_aces, l_aces, w_serve_errors, l_serve_errors, w_blocks, l_blocks, w_digs, l_digs
@@ -56,7 +56,7 @@ In order to analyze which plays or strategies are most useful to win the game, I
 ## Kills
 In beach volleyball, a kill is any play that results in a legal point being scored ^[https://en.wikipedia.org/wiki/Volleyball_jargon]. 
 
-The distribution of kills for winning and losing teams are roughly the same shape, but the distribution for winning teams is noticably shifted to the right of the distribution for losing teams. This makes sense because in order for a team to win, they must score more points than the other team, thus winning teams would have more overall kills than losing teams. 
+Clearly, the entire distribution of kills for winning teams is noticably shifted to the right compared to the distribution for losing teams, which makes sense because each winning team would need to have more kills than their opposing team in order to win the game. It is also notable that the curve of the distribution for the winning teams is more narrow (appearing to have a smaller standard error than the distribution for losing teams), indicating that winning teams score a high number of kills (around median of approximately 30) fairly consistantly, whereas the number of kills the losing team scores is more variable in general. 
 
 ```{r, echo = FALSE}
 # kills
@@ -67,6 +67,7 @@ vb_matches_tidy4 <- vb_matches_tidy2 %>%
 
 ggplot(vb_matches_tidy4, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Kills for Winning Versus Losing Teams",
        x = "Number of Kills",
        y = "Density")
@@ -90,7 +91,8 @@ vb_matches_tidy3 <- vb_matches_tidy2 %>%
 
 # create boxplots showing distribution of attacks for winners versus losers
 ggplot(vb_matches_tidy3, aes(x = values, fill = win)) +
-  geom_density(alpha = 0.7) + 
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(
     title = "Distribution of Attacks for Winning Versus Losing Teams",
        x = "Number of Attacks",
@@ -112,6 +114,7 @@ vb_matches_tidy6 <- vb_matches_tidy2 %>%
 
 ggplot(vb_matches_tidy6, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Aces for Winning Versus Losing Teams",
        x = "Number of Aces",
        y = "Density")
@@ -132,6 +135,7 @@ vb_matches_tidy8 <- vb_matches_tidy2 %>%
 
 ggplot(vb_matches_tidy8, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Blocks for Winning Versus Losing Teams",
        x = "Number of Blocks",
        y = "Density")
@@ -152,6 +156,7 @@ vb_matches_tidy9 <- vb_matches_tidy2 %>%
 
 ggplot(vb_matches_tidy9, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Digs for Winning Versus Losing Teams",
        x = "Number of Digs",
        y = "Density")
@@ -172,6 +177,7 @@ vb_matches_tidy5 <- vb_matches_tidy2 %>%
 
 ggplot(vb_matches_tidy5, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Errors for Winning Versus Losing Teams",
        x = "Number of Errors",
        y = "Density")
@@ -193,6 +199,7 @@ vb_matches_tidy7 <- vb_matches_tidy2 %>%
 
 ggplot(vb_matches_tidy7, aes(x = values, fill = win)) +
   geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Distribution of Serve Errors for Winning Versus Losing Teams",
        x = "Number of Serve Errors",
        y = "Density")
@@ -203,14 +210,19 @@ ggplot(vb_matches_tidy7, aes(x = values, fill = win)) +
 To put this into perspective, I created a barplot below showing the proportion of total plays (over all matches) each individual play represented for winning versus losing teams.  
 
 ```{r, echo = FALSE}
+# calculate proportions for bar plot
 vb_matches_grouped <- vb_matches_tidy2 %>% 
   filter(values != "NA") %>% 
+  # create binary win/lose variable win1
   mutate(win1 = ifelse(win == "w_attacks" | win == "w_kills" | win == "w_errors" | win == "w_aces" | win == "w_serve_errors" | win == "w_blocks" | win == "w_digs", "Win", "Lose")
          ) %>% 
+  # calculate total number of plays for winning and losing teams
   group_by(win1) %>% 
   mutate(total = sum(values)) %>% 
+  # calculate total number of each type of play for winning and losing    # teams, and calculate proportion of total plays
   group_by(win) %>% 
   mutate(sum = sum(values), prop = sum/total) %>% 
+  # combine winner and loser plays into one variable for each type of     # play (for simplicity)
   mutate(play = ifelse(win == "w_attacks" | win == "l_attacks", "attacks", 
                        ifelse(win == "w_kills" | win == "l_kills", "kills",
                               ifelse(win == "w_errors" | win == "l_errors", "errors",
@@ -223,17 +235,18 @@ vb_matches_grouped <- vb_matches_tidy2 %>%
                                      )
                               )
                        )
-         )
+         )  
                                           
   
-
+# create barplot comparing proportions of each play for winners versus losers
 ggplot(vb_matches_grouped, aes(x = play, y = prop, fill = win1)) +
-  geom_col(position = "dodge") +
+  geom_col(position = "dodge", color = "black") +
   coord_flip() + 
+  scale_fill_manual(values = c("skyblue", "yellow")) +
   labs(title = "Proportions of Each Play out of Total Plays",
        subtitle = "winners versus losers",
-       x = "Proportion",
-       y = "Play",
+       y = "Proportion",
+       x = "Play",
        fill = "Win")
 ```
 
