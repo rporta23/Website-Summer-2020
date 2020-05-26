@@ -6,10 +6,20 @@
     <description>Recent content on Rose Porta</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Cocktails</title>
+      <link>/2020/05/25/cocktails/</link>
+      <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/05/25/cocktails/</guid>
+      <description>Creating cocktails is a delicate art. This week’s #TidyTuesday data contains recipe information for many different types of cocktails including the ingredients and amounts of each ingredient in each drink 1 2.
+I used this data to examine the top 5 ingredients by frequency (how many different recipes the ingredient appears in) and amount (total volume of ingredient in ounces across all recipes) for each of 8 different categories of cocktails.</description>
+    </item>
     
     <item>
       <title>Beach Volleyball</title>

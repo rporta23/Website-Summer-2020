@@ -1,0 +1,119 @@
+---
+title: Cocktails
+author: Rose Porta
+date: '2020-05-25'
+slug: cocktails
+categories: []
+tags: []
+draft: true
+---
+
+
+
+<p>Creating cocktails is a delicate art. This week’s #TidyTuesday data contains recipe information for many different types of cocktails including the ingredients and amounts of each ingredient in each drink <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<p>I used this data to examine the top 5 ingredients by frequency (how many different recipes the ingredient appears in) and amount (total volume of ingredient in ounces across all recipes) for each of 8 different categories of cocktails. I had a lot of fun experimenting with manual fill colors and themes in ggplot this week!</p>
+<div id="brandy" class="section level1">
+<h1>Brandy</h1>
+<p>For brandys, it is notable that the top 5 ingredients by frequency and amount are the same, but the ordering is different.</p>
+<div id="top-5-ingredients-by-frequency" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="top-5-ingredients-by-amount" class="section level2">
+<h2>Top 5 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+</div>
+<div id="cocktail-classics" class="section level1">
+<h1>Cocktail Classics</h1>
+<p>Similarly to the brandy category, the top 5 ingredients by frequency and amount are the same for the cocktail classics category, but the ordering changes. It is interesting that egg whites appear in the top 5 ingredients!</p>
+<div id="top-5-ingredients-by-frequency-1" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="top-5-ingredients-by-amount-1" class="section level2">
+<h2>Top 5 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+</div>
+<div id="cordials-and-liqueurs" class="section level1">
+<h1>Cordials and Liqueurs</h1>
+<p>For this category, I did top 3 instead of top 5 because there were too many ties beyond the top 3. This suggests that the basis of this category is a relatively simple drink recipe, but there are lots of different variations that bring in extra ingredients. Unlike the previous two categories, the top 3 ingredients for this category stay exactly the same, with the same order.</p>
+<div id="top-3-ingredients-by-frequency" class="section level2">
+<h2>Top 3 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="top-3-ingredients-by-amount" class="section level2">
+<h2>Top 3 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+</div>
+<div id="gin" class="section level1">
+<h1>Gin</h1>
+<p>In the gin category, a different ingredient from the top 5 by frequency pops up in the top 5 by amount: raspberries, lemon twist. This oddball ingredient only appeared in one recipe, but the quantity in that one recipe was large, so it made it into the top 5 for amount!</p>
+<div id="top-5-ingredients-by-frequency-2" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="top-5-ingredients-by-amount-2" class="section level2">
+<h2>Top 5 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+</div>
+<div id="rum---daiquiris" class="section level1">
+<h1>Rum - Daiquiris</h1>
+<p>In this category, dark rum moves from 5th place to second place in the top 5 when we compare frequency to amount, suggesting that relatively few recipes include dark rum, but those that do include it in large quantities.</p>
+<p>In the top 5 by amount, we see angostura bitters knock out lemon juice for 4th place.</p>
+<div id="top-5-ingredients-by-frequency-3" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="top-5-ingredients-by-amount-3" class="section level2">
+<h2>Top 5 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+</div>
+<div id="tequila" class="section level1">
+<h1>Tequila</h1>
+<p>In the tequila category, it is interesting that we see orange juice replace lemon juice in the top 5 comparing frequeny to amount.</p>
+<div id="top-5-ingredients-by-frequency-4" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="top-5-ingredients-by-amount-4" class="section level2">
+<h2>Top 5 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+</div>
+<div id="vodka" class="section level1">
+<h1>Vodka</h1>
+<p>A similar situation happens in the vodka category, with cranberry juice replacing lime juice in the top 5 by amount (compared to by frequency).</p>
+<div id="top-5-ingredients-by-frequency-5" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="top-5-ingredients-by-amount-5" class="section level2">
+<h2>Top 5 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+</div>
+<div id="whiskies" class="section level1">
+<h1>Whiskies</h1>
+<p>For the whiskies category, there were too many ties for 5th place for top 5 by amount, so I only included top 4.</p>
+<div id="top-5-ingredients-by-frequency-6" class="section level2">
+<h2>Top 5 Ingredients by Frequency</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+<div id="top-4-ingredients-by-amount" class="section level2">
+<h2>Top 4 Ingredients by Amount</h2>
+<p><img src="/post/2020-05-25-cocktails_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Overall, it is not surprising that the top ingredient for each category is the specific type of alcoholic beverage that defines the category. One notable thread is that lemon juice appears in the top 5 for both frequency and amount in almost every single category. This is interesting because almost nobody would voluntarily drink lemon juice on its own, but in a cocktail, it is evidently a very popular ingredient!</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-26/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-26/readme.md</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.kaggle.com/jenlooper/mr-boston-cocktail-dataset" class="uri">https://www.kaggle.com/jenlooper/mr-boston-cocktail-dataset</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
+</div>

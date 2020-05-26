@@ -1,0 +1,449 @@
+---
+title: Cocktails
+author: Rose Porta
+date: '2020-05-25'
+slug: cocktails
+categories: []
+tags: []
+draft: true
+---
+
+Creating cocktails is a delicate art. This week's #TidyTuesday data contains recipe information for many different types of cocktails including the ingredients and amounts of each ingredient in each drink ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-05-26/readme.md] ^[https://www.kaggle.com/jenlooper/mr-boston-cocktail-dataset]. 
+
+I used this data to examine the top 5 ingredients by frequency (how many different recipes the ingredient appears in) and amount (total volume of ingredient in ounces across all recipes) for each of 8 different categories of cocktails. I had a lot of fun experimenting with manual fill colors and themes in ggplot this week!
+
+```{r,  include = FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+```{r, include = FALSE, echo = FALSE}
+# read in data
+cocktails <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-26/cocktails.csv')
+boston_cocktails <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-26/boston_cocktails.csv')
+
+# load packages
+library(tidyverse)
+library(tm)
+```
+
+```{r, warning = FALSE, echo = FALSE}
+
+# reformat measurements
+
+boston_cocktails2 <- boston_cocktails %>% 
+  separate(
+    col = "measure", 
+    into = c("measure1", "measure2", "unit"), 
+    sep = " "
+    ) %>% 
+  mutate(measure1 = ifelse(measure1 %in% c("For", "splash"), 0, measure1),
+    unit = ifelse(measure2 %in% c("oz", "tsp", "splash", "slices", "dash", "glass", "bottles", "dashes"), measure2, unit),
+        measure2 = ifelse(measure2 %in% c("1/2", "1/4", "3/4", "2/3"), measure2, 0)
+         ) %>% 
+  separate(
+    col = measure1,
+    into = c("measure1a", "measure1b"),
+    sep = "/"
+  ) %>% 
+  separate(
+    col = measure2,
+    into = c("measure2a", "measure2b"),
+    sep = "/"
+  ) %>% 
+  mutate(measure1a = as.numeric(measure1a),
+         measure1b = as.numeric(measure1b),
+         measure2a = as.numeric(measure2a),
+         measure2b = as.numeric(measure2b),
+         measure1 = ifelse(is.na(measure1b), measure1a, measure1a/measure1b),
+         measure2 = ifelse(is.na(measure2b), measure2a, measure2a/measure2b),
+         measure = measure1 + measure2
+         )
+# remove stop words from ingredients and make everything lower case
+
+stop_words <- c("of", "a", "and", "fresh", "flavored")
+
+boston_cocktails2 <- boston_cocktails2 %>% 
+  mutate(ingredient = tolower(ingredient),
+         ingredient = removeWords(ingredient, stop_words))
+
+# calculate top 5 ingredients in each category by frequency
+boston_cocktail_summarized <- boston_cocktails2 %>% 
+  group_by(category, ingredient) %>% 
+  summarize(count = n()) %>% 
+  top_n(n = 5, wt = count)
+
+# calculate top 5 ingredients in each category by amount
+boston_cocktails_sum <- boston_cocktails2 %>% 
+  filter(unit == "oz") %>% 
+  group_by(category, ingredient) %>% 
+  summarize(count = n(), sum = sum(measure)) %>% 
+  top_n(n = 5, wt = sum)
+
+```
+
+# Brandy
+
+For brandys, it is notable that the top 5 ingredients by frequency and amount are the same, but the ordering is different. 
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_brandy <- boston_cocktail_summarized %>% 
+  filter(category == "Brandy") %>% 
+  mutate(ingredient = reorder(ingredient, count))
+
+col <- setNames(c( "plum2", "steelblue1", "lightgoldenrod1", "aquamarine", "mistyrose2"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_brandy, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Brandy", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 5 Ingredients by Amount
+```{r}
+boston_brandy2 <- boston_cocktails_sum %>% 
+  filter(category == "Brandy") %>% 
+  mutate(ingredient = reorder(ingredient, sum))
+
+col2 <- setNames(c("lightgoldenrod1", "steelblue1", "aquamarine", "plum2", "mistyrose2"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_brandy2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Amount",
+       subtitle = "Category: Brandy",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Cocktail Classics
+
+Similarly to the brandy category, the top 5 ingredients by frequency and amount are the same for the cocktail classics category, but the ordering changes. It is interesting that egg whites appear in the top 5 ingredients!
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_classics <- boston_cocktail_summarized %>% 
+  filter(category == "Cocktail Classics") %>% 
+  mutate(ingredient = reorder(ingredient, count))
+
+col <- setNames(c( "azure1", "lightgoldenrod1", "slategray2" , "powderblue", "olivedrab2"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_classics, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Cocktail Classics", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 5 Ingredients by Amount
+```{r}
+boston_classics2 <- boston_cocktails_sum %>% 
+  filter(category == "Cocktail Classics") %>% 
+  mutate(ingredient = reorder(ingredient, sum))
+
+col2 <- setNames(c( "azure1", "lightgoldenrod1", "slategray2" , "powderblue", "olivedrab2"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_classics2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Amount",
+       subtitle = "Category: Cocktail Classics",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Cordials and Liqueurs
+
+For this category, I did top 3 instead of top 5 because there were too many ties beyond the top 3. This suggests that the basis of this category is a relatively simple drink recipe, but there are lots of different variations that bring in extra ingredients. Unlike the previous two categories, the top 3 ingredients for this category stay exactly the same, with the same order. 
+
+## Top 3 Ingredients by Frequency
+```{r}
+boston_cordials <- boston_cocktail_summarized %>% 
+  filter(category == "Cordials and Liqueurs") %>% 
+  mutate(ingredient = reorder(ingredient, count)) %>% 
+  top_n(n = 3, wt = count)
+
+col <- setNames(c("lightgoldenrod1", "orange1", "palevioletred4"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_cordials, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 3 Ingredients by Frequency",
+       subtitle = "Category: Cordials and Liqueurs", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 3 Ingredients by Amount
+```{r}
+boston_cordials2 <- boston_cocktails_sum %>% 
+  filter(category == "Cordials and Liqueurs") %>% 
+  mutate(ingredient = reorder(ingredient, sum)) %>% 
+  top_n(n = 3, wt = count)
+
+col2 <- setNames(c("lightgoldenrod1", "orange1","palevioletred4"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_cordials2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 3 Ingredients by Amount",
+       subtitle = "Category: Cordials and Liqueurs",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Gin
+
+In the gin category, a different ingredient from the top 5 by frequency pops up in the top 5 by amount: raspberries, lemon twist. This oddball ingredient only appeared in one recipe, but the quantity in that one recipe was large, so it made it into the top 5 for amount!
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_gin <- boston_cocktail_summarized %>% 
+  filter(category == "Gin") %>% 
+  mutate(ingredient = reorder(ingredient, count)) 
+
+col <- setNames(c("lightgoldenrod1", "orange1", "slategray2", "aquamarine", "lemonchiffon3"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_gin, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Gin", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 5 Ingredients by Amount
+```{r}
+boston_gin2 <- boston_cocktails_sum %>% 
+  filter(category == "Gin") %>% 
+  mutate(ingredient = reorder(ingredient, sum))
+
+col2 <- setNames(c("lightgoldenrod1", "slategray2", "hotpink", "aquamarine", "lemonchiffon3"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_gin2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Amount",
+       subtitle = "Category: Gin",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Rum - Daiquiris
+
+In this category, dark rum moves from 5th place to second place in the top 5 when we compare frequency to amount, suggesting that relatively few recipes include dark rum, but those that do include it in large quantities. 
+
+In the top 5 by amount, we see angostura bitters knock out lemon juice for 4th place. 
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_rum <- boston_cocktail_summarized %>% 
+  filter(category == "Rum - Daiquiris") %>% 
+  mutate(ingredient = reorder(ingredient, count)) 
+
+col <- setNames(c("rosybrown", "lightgoldenrod1", "orange1", "limegreen", "rosybrown2"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_rum, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Rum - Daiquiris", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 5 Ingredients by Amount
+```{r}
+boston_rum2 <- boston_cocktails_sum %>% 
+  filter(category == "Rum - Daiquiris") %>% 
+  mutate(ingredient = reorder(ingredient, sum))
+
+col2 <- setNames(c("orange1", "plum2", "limegreen", "rosybrown", "rosybrown2"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_rum2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Amount",
+       subtitle = "Category: Rum - Daiquiris",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Tequila
+
+In the tequila category, it is interesting that we see orange juice replace lemon juice in the top 5 comparing frequeny to amount. 
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_tequila <- boston_cocktail_summarized %>% 
+  filter(category == "Tequila") %>% 
+  mutate(ingredient = reorder(ingredient, count)) 
+
+col <- setNames(c("sienna1", "lightgoldenrod1", "orange1", "limegreen", "honeydew1"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_tequila, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Tequila", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 5 Ingredients by Amount
+```{r}
+boston_tequila2 <- boston_cocktails_sum %>% 
+  filter(category == "Tequila") %>% 
+  mutate(ingredient = reorder(ingredient, sum))
+
+col2 <- setNames(c("orange1", "darkgoldenrod2", "sienna1", "limegreen", "honeydew1"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_tequila2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Amount",
+       subtitle = "Category: Tequila",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Vodka
+
+A similar situation happens in the vodka category, with cranberry juice replacing lime juice in the top 5 by amount (compared to by frequency).
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_vodka <- boston_cocktail_summarized %>% 
+  filter(category == "Vodka") %>% 
+  mutate(ingredient = reorder(ingredient, count)) 
+
+col <- setNames(c("gold2", "limegreen", "orange1", "lightgoldenrod1", "cadetblue1"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_vodka, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Vodka", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 5 Ingredients by Amount
+```{r}
+boston_vodka2 <- boston_cocktails_sum %>% 
+  filter(category == "Vodka") %>% 
+  mutate(ingredient = reorder(ingredient, sum))
+
+col2 <- setNames(c("firebrick1", "orange1", "gold2", "lightgoldenrod1", "cadetblue1"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_vodka2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Amount",
+       subtitle = "Category: Vodka",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+# Whiskies
+
+For the whiskies category, there were too many ties for 5th place for top 5 by amount, so I only included top 4. 
+
+## Top 5 Ingredients by Frequency
+```{r}
+boston_whiskies <- boston_cocktail_summarized %>% 
+  filter(category == "Whiskies") %>% 
+  mutate(ingredient = reorder(ingredient, count)) 
+
+col <- setNames(c("orange1", "plum2", "mediumpurple4", "lightgoldenrod1", "mediumpurple1"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_whiskies, aes(x = ingredient, y = count, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() + 
+  scale_fill_manual(values = col) + 
+  theme_dark() + 
+  labs(title = "Top 5 Ingredients by Frequency",
+       subtitle = "Category: Whiskies", 
+       y = "Count",
+       x = "Ingredient",
+       fill = "Ingredient"
+       )
+```
+
+##  Top 4 Ingredients by Amount
+```{r}
+boston_whiskies2 <- boston_cocktails_sum %>% 
+  filter(category == "Whiskies") %>% 
+  mutate(ingredient = reorder(ingredient, sum)) %>% 
+  top_n(n = 4, wt = sum)
+
+col2 <- setNames(c("lightgoldenrod1", "plum2", "mediumpurple4", "mediumpurple1"), levels(boston_cocktail_summarized$ingredient))
+
+ggplot(boston_whiskies2, aes(x = ingredient, y = sum, fill = ingredient)) +
+  geom_col() + 
+  coord_flip() +
+  scale_fill_manual(values = col2) +
+  theme_dark() + 
+  labs(title = "Top 4 Ingredients by Amount",
+       subtitle = "Category: whiskies",
+       y = "Total Amount Across All Drinks (oz)",
+       x = "Ingredient",
+       fill = "Ingredient")
+```
+
+Overall, it is not surprising that the top ingredient for each category is the specific type of alcoholic beverage that defines the category. One notable thread is that lemon juice appears in the top 5 for both frequency and amount in almost every single category. This is interesting because almost nobody would voluntarily drink lemon juice on its own, but in a cocktail, it is evidently a very popular ingredient!
