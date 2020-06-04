@@ -1,0 +1,205 @@
+---
+title: Marble Races
+author: Rose Porta
+date: '2020-06-01'
+slug: marble-races
+categories: []
+tags: []
+---
+
+```{r, echo = FALSE, include = FALSE}
+# Get the Data
+
+marbles <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-02/marbles.csv')
+
+# load packages
+library(tidyverse)
+```
+
+```{r, echo = FALSE, warning = FALSE}
+# calculate average speed (m/s), and average number of laps per second
+marbles <- marbles %>% 
+  mutate(avg_speed = track_length_m/ time_s,
+         avg_speed_lap = number_laps/time_s)
+```
+
+![](/post/2020-06-01-marble-races_files/marble.jpg){width=500px height=400px} ^[https://nymag.com/intelligencer/2020/03/why-marble-racing-is-so-popular-online.html]
+
+Marble racing has become a recent trend. It involves dropping marbles into a track, and the marble that stays in the track the longest wins. When the marble goes into the track, it swirls around a structure shaped like a funnel, and then eventually drops through the hole of the funnel into another funnel and repeats the process through a series of funnels until it falls all the way out of the track. A quick video that will give you the general idea is [here](https://www.youtube.com/watch?v=ElMeb_AcquU) ^[https://www.youtube.com/watch?v=ElMeb_AcquU], and a slightly longer video that will give you a fuller understanding of how it works is [here](https://www.youtube.com/watch?v=YRvoxRaeuno) ^[https://www.youtube.com/watch?v=YRvoxRaeuno]. 
+
+This week's #TidyTuesday data contains data from YouTube videos of these races from the YouTube chanel "Jelle's Marble Runs" ^[https://www.youtube.com/channel/UCYJdpnjuSWVOLgGT9fIzL0g] ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-02/readme.md]. The data contains information about the times, track lengths, team names, marble names, whether or not the team was the "host" of the race, dates, and more for several marble races. At first thought, one would think that which marble wins a marble race would be completely random. However, [this blogpost](http://www.randalolson.com/2020/05/24/a-data-driven-look-at-marble-racing/) ^[http://www.randalolson.com/2020/05/24/a-data-driven-look-at-marble-racing/] by Randy Olson shows that particular marbles are actually more likely to win than others, suggesting that there may be some sort of strategy involved such as the angle at which the marble is dropped and the initial speed of the marble. 
+
+# What is the goal in a marble race?
+
+To illustrate the basic objectives when racing marbles, I have created a few scatterplots below showing the relationships between various variables present in the data set. 
+
+The first plot (below) shows the clear positive relationship between the overall time the marbles stays in the track and number of laps the marble completes.The longer the marble stays in the track, the better, and in order to stay in the track longer, the marble must do more laps.  
+
+```{r, echo = FALSE, warning = FALSE}
+# create scatterplot of time versus number of laps
+ggplot(marbles, aes(x = time_s, y = number_laps)) +
+  geom_point()+
+  geom_jitter() +
+  labs(title = "Time versus Number of Laps",
+       x = "Time the marble stayed in the track (s)",
+       y = "Number of Laps")
+```
+
+The second scatterplot (below) shows the relationship between the number of laps and the average time it takes for a marble to complete one lap. With the exception of cases where there was only one lap, which have a lot of variability, we see a clear negative relationship, indicating that the more laps a marble does, the faster each lap is on average. This makes logical sense because in order to do more laps, the average time of a lap needs to be faster in order to maintain momentum.   
+
+```{r, echo = FALSE, warning = FALSE}
+# create scatterplot of number of laps versus lap time
+ggplot(marbles, aes(x = number_laps, y = avg_time_lap)) +
+  geom_point() +
+  geom_jitter() +
+  labs(title = "Number of Laps versus Average Lap Time",
+       x = "Number of Laps",
+       y = "Average Lap Time (s)")
+```
+
+The relationship between the overall time and the average time of a lap is a bit tricky. If as the overall time increases, the number of laps increase (shown in the first plot), and as the number of laps increase, the average time of a lap decreases (shown in the second plot), it would follow by logic that as the overall time increases, the average lap time would decrease, right? However, we are seeing just the opposite in the graph below. It gets confusing because it makes sense in a way that if the overall time is longer, the time of a lap would be longer, but the opposite also makes sense-- that in order to stay in the track longer, the marble would need to be doing laps at a faster pace. There may be other factors at play here that I am not taking into account.  
+
+```{r, echo = FALSE, warning = FALSE}
+# create plot of time versus lap time
+ggplot(marbles, aes(x = time_s, y = avg_time_lap)) +
+  geom_point() +
+  geom_jitter() +
+  labs(title = "Time versus Average Lap Time",
+       x = "Time the marble stayed in the track (s)",
+       y = "Average Lap Time (s)")
+```
+
+
+This scatterplot below shows the relationship between the track length and the time each marble stays in the track. It seems obvious that if the track is longer, the marble would stay on it for longer, but surprisingly there appears to be no relationship whatsoever between track length and time. It seems strange that some marbles have very short times while others have very long times, even when comparing within the same length track. It could be that the shape or steepness of the track is more strongly associated with the time than the length. Each colored cluster of points represents a different race with a different track for each race. 
+
+```{r, echo = FALSE, warning = FALSE}
+# create plot of track length versus time
+ggplot(marbles, aes(x = track_length_m, y = time_s, color = race)) +
+  geom_point() +
+  geom_jitter() +
+  labs(title = "Track Length versus Time",
+       x = "Track Length (m)",
+       y = "Time Marble Stayed in Track (s)"
+       ) 
+```
+
+In order to represent this relationship in a little more detail, I have created boxplots below showing the distributions of times for each unique track length. Clearly, the distributions are all over the place, and there does not seem to be any relationship between track length and time. 
+
+```{r, echo = FALSE, warning = FALSE}
+# create boxplot of time distributions by track length
+ggplot(marbles, aes(
+  x = as.factor(track_length_m), 
+  y = time_s, 
+  fill = as.factor(track_length_m)))+
+  geom_boxplot(color = "white") +
+  labs(title = "Time Distributions by Track Length",
+       x = "Track Length (meters)",
+       y = "Time (s)",
+       fill = "Track Length (meters)"
+       ) +
+  theme_dark()
+```
+
+# Can one Team Really be Better than Another?
+
+In order to analyze whether any particular team could truly do consistently well or consistently poorly compared to the other teams, I calculated the winning percentages (percentage of races where the team placed first) and losing percentages (percentage of races where the team placed last), and the results are shown in the barplots below. I have excluded teams whose winning/losing percentages were zero (i.e. they placed somewhere in the middle).
+
+Surprisingly, the team that has the greatest percentage of wins by far, Team Primary, also has the highest percentage of loses, although not by as wide of a margin.
+
+```{r, echo = FALSE, warning = FALSE}
+# calculate win and lose percentages for each team
+marbles_win <- marbles %>% 
+  filter(time_s != "NA") %>% 
+  group_by(race) %>% 
+  mutate(win_time = max(time_s),
+         lose_time = min(time_s),
+         win = ifelse(win_time == time_s, 1, 0),
+         lose = ifelse(lose_time == time_s, 1, 0),
+         ) %>% 
+  group_by(team_name) %>% 
+  mutate(
+    avg_win_pct = mean(win),
+    avg_lose_pct = mean(lose)
+         )
+
+# filter to only one race to avoid duplication
+marbles_win2 <- marbles_win %>% 
+  filter(avg_win_pct != 0,
+         race == "S1Q1") 
+
+# set vector of colors corresponding to teams
+col <- setNames(c( "tomato", "goldenrod1", "green", "pink", "royalblue1", "darkorchid1", "turquoise1"), levels(marbles_win$team_name))
+
+# create barplot of winning percentages
+ggplot(marbles_win2, aes(x = team_name, 
+                         y = avg_win_pct,
+                         fill = team_name)) +
+  scale_fill_manual(values = col) +
+  geom_col(color = "black") +
+  scale_y_continuous() +
+  coord_flip() +
+  theme_dark() +
+  labs(title = "Winning Percentages by Team",
+       x = "Team Name",
+       y = "Winning Percentage",
+       fill = "Team Name")
+```
+
+```{r, echo = FALSE, warning = FALSE}
+# create barplot of losing percentages
+marbles_win3 <- marbles_win %>% 
+  filter(avg_lose_pct != 0,
+         race == "S1Q1") 
+
+col2 <- setNames(c("tomato","olivedrab3","thistle3","yellow","olivedrab4", "orange", "palegreen1", "honeydew1", "navyblue", "darkorchid1", "turquoise1"), levels(marbles_win$team_name))
+
+ggplot(marbles_win3, aes(x = team_name, 
+                         y = avg_lose_pct,
+                         fill = team_name)) +
+  scale_fill_manual(values = col2) +
+  geom_col(color = "black") +
+  scale_y_continuous() +
+  coord_flip() +
+  theme_dark() +
+  labs(title = "Losing Percentages by Team",
+       x = "Team Name",
+       y = "Losing Percentage",
+       fill = "Team Name")
+```
+
+In order to analyze Team Primary's actions more closely, I created two density plots below showing the distributions of speeds and lap times for this team. 
+
+Interestingly, the distribution for speed is bimodal, with some speeds very high and others very low. This is consistent with the fact that this team won a large percentage of races, but also lost a large percentage. However, it still leaves the question of why their outcomes were so polarized. 
+
+The blogpost referenced above by Randy Olson suggests that this inconsistency in performance may be the result of a consistently "high performing" marble being paired with a consistently "low performing" marble on the same team. It seemed to overwhelming to analyze each marble individually in the context of this blogpost, but this is an intriguing possible explanation that leads me to wonder how a specific marble could perform so consistently. 
+
+```{r, echo = FALSE, warning = FALSE}
+# create density plot for speed for Team Primary
+marbles_primary <- marbles_win %>% 
+  filter(team_name == "Team Primary")
+
+ggplot(marbles_primary, aes(x = avg_speed)) +
+  geom_density(fill = "turquoise1") +
+  labs(title = "Average Speed Distribution",
+       subtitle = "Team Primary",
+       x = "Average Speed (m/s)")
+```
+
+The distribution of lap times is also surprising. It is essentially a normal distribution with a mean of approximately 30 seconds. This suggests that Team Primary's lap times remained relatively consistent despite the drastic variance in their overall times. 
+
+```{r, echo = FALSE, warning = FALSE}
+# create density plot of lap times for Team Primary
+marbles_primary <- marbles_win %>% 
+  filter(team_name == "Team Primary")
+
+ggplot(marbles_primary, aes(x = avg_time_lap, fill = team_name)) +
+  geom_density(fill = "turquoise1") +
+  labs(title = "Average Lap Time Distribution",
+       subtitle = "Team Primary",
+       x = "Average Lap Time (s)")
+```
+
+This analysis leaves me with several more questions that would require more extensive and detailed data. I am still curious about how and why certain marbles or teams consistently win or consistently lose, and why other marbles have more variable and seemingly random performances from race to race. I would be interested in analysing data about the angle at which the marbles are being dropped into the track, their initial speed, the order in which the marbles are dropped, and the shape, material, and density of the marbles (if there are differences). It could even be interesting to look in more detail about the people dropping each marble and analyzing factors such as how much practice they have had, and any strategies they might be using. 
+
+On the surface, marble racing may seem simple and mindless, but if we dig deep into the laws of physics governing the performance of the marbles, there is so much more to explore!
+
