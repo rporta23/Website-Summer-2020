@@ -1,0 +1,207 @@
+---
+title: African American Achievements
+author: Rose Porta
+date: '2020-06-08'
+slug: african-american-achievements
+categories: []
+tags: []
+draft: true
+---
+
+In support of Black Lives Matter, this week's #TidyTuesday data highlights African American pioneers in many areas including entertainment, science, politics, military, sports, religion, law, and more between 1738 and 2019 ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-09/readme.md]. For each achievement, the data contains a summary of the achievement, the individual's name, the year of the achievement, the gender of the individual, and the broad category the achievement falls under. For a full list of the achievements, see [this wikipedia article](https://en.wikipedia.org/wiki/List_of_African-American_firsts) ^[https://en.wikipedia.org/wiki/List_of_African-American_first].
+
+```{r, echo = FALSE, include = FALSE}
+# Get the Data
+
+firsts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-09/firsts.csv')
+science <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-09/science.csv')
+
+# load packages
+library(tidyverse)
+```
+
+# Overview of African American Achievements Over Time
+
+To give a broad overview, I have created a time series plot below summarizing the number of recorded African American achievements each year between 1738 and 2019. Although this is an extreme simplification of the hard work and accomplishment of each of these individuals, it makes clear that the overall numbers started to increase dramatically around the mid 1900s corresponding to the Civil Rights Movement of the 1960s. 
+
+Given that opportunities in almost all facets of society in the U.S. are still much more available for whites than for people of color, I can only imagine how much higher these already impressive numbers could be if there was an even playing field. 
+
+```{r, echo = FALSE}
+# count achievements per year
+firsts_summarized <- firsts %>% 
+  group_by(year) %>% 
+  summarize(count = n())
+
+# create line plot of schievements over time
+ggplot(firsts_summarized, aes(x = year, y = count)) +
+  geom_line() +
+  theme_bw() +
+  labs(
+    title = "Trends in Number of African American Achivements Per Year",
+       subtitle = "1738-2019",
+    x = "Year",
+    y = "Number of Achievements")
+```
+
+# African American Achievements by Category
+
+In order to analyze the distribution of these achievements across different facets of society, I created a barplot below representing the number of achievement in each designated category across the entire time period represented in the data. 
+
+```{r, echo = FALSE}
+
+# code from https://stackoverflow.com/questions/47504876/how-to-reorder-the-groups-in-a-grouped-bar-chart
+firsts$category <- factor(firsts$category,
+                          levels = c("Law",
+                                     "Religion",
+                                     "Sports",
+                                     "Social & Jobs",
+                                     "Military",
+                                     "Politics",
+                                     "Education & Science",
+                                     "Arts & Entertainment"
+                                     ))
+
+# calculate counts by category
+firsts_summarized_c <- firsts %>%  
+  group_by(year, category) %>% 
+  summarize(count = n()) 
+
+# create barplot of counts by category
+ggplot(firsts_summarized_c, 
+       aes(x = category, y = count, fill = category)) +
+  geom_col() +
+  theme_bw() +
+  coord_flip() +
+  scale_fill_manual(
+    values = c("palevioletred", "darkolivegreen3", "steelblue1",
+               "lightgoldenrod", "plum2", "mediumpurple1",
+               "lightgreen", "orange")) +
+  labs(title = "Number of African American Achievements by Category",
+       subtitle = "1738-2019",
+       x = "Category", 
+       y = "Number of Achievements",
+       fill = "Category"
+       )
+```
+
+Clearly, African Americans have especially contributed significantly to the areas of Arts & Entertainment, Education & Sciences, Politics, and Military. 
+
+# Breakdown of Achievements Over Time By Gender and Category
+
+In order to analyze the trends in achievements over time in more detail, I have created two dotplots below: one separating the achievements by gender, and one separating by category. 
+
+## By Gender
+
+```{r, echo = FALSE, message = FALSE}
+# create dotplot broken down by gender
+ggplot(firsts, aes(x = year, fill = gender)) +
+  geom_dotplot() +
+  theme_bw() +
+  scale_fill_manual(values = c("skyblue", "hotpink")) +
+  labs(title = "African American Achievements Over Time by Gender",
+       subtitle = "1738-2019",
+       x = "Year",
+       y = "Count",
+       fill = "Gender")
+```
+
+Clearly and not surprisingly, significantly more of the achievements have been contributed my men than by women. This trend appears to be consistent across the entire time period, all the way to 2019. 
+
+## By Category
+
+The distributions by category are all fairly similar with the achievements in each category increasing significantly around 1950.
+
+```{r, echo = FALSE, message = FALSE}
+# filter by category
+firsts1 <- firsts %>% 
+  filter(category == "Law")
+firsts2 <- firsts %>% 
+  filter(category == "Religion")
+firsts3 <- firsts %>% 
+  filter(category == "Sports")
+firsts4<- firsts %>% 
+  filter(category == "Social & Jobs")
+firsts5 <- firsts %>% 
+  filter(category == "Military")
+firsts6 <- firsts %>% 
+  filter(category == "Politics")
+firsts7 <- firsts %>% 
+  filter(category == "Education & Science")
+firsts8 <- firsts %>% 
+  filter(category == "Arts & Entertainment")
+
+# create separate dot plots for each category
+ggplot(firsts1, aes(x = year)) +
+  geom_dotplot(fill = "palevioletred") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Law, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts2, aes(x = year)) +
+  geom_dotplot(fill = "darkolivegreen3") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Religion, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts3, aes(x = year)) +
+  geom_dotplot(fill = "steelblue1") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Sports, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts4, aes(x = year)) +
+  geom_dotplot(fill = "lightgoldenrod") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Social & Jobs, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts5, aes(x = year)) +
+  geom_dotplot(fill = "plum2") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Military, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts6, aes(x = year)) +
+  geom_dotplot(fill = "mediumpurple1") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Politics, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts7, aes(x = year)) +
+  geom_dotplot(fill = "lightgreen") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Education & Science, 1738-2019",
+       x = "Year",
+       y = "Count")
+
+ggplot(firsts8, aes(x = year)) +
+  geom_dotplot(fill = "orange") +
+  theme_bw() +
+  labs(title = "African American Achievements Over Time",
+       subtitle = "Arts & Entertainment, 1738-2019",
+       x = "Year",
+       y = "Count")
+```
+
+# David Blackwell
+
+![](/post/2020-06-08-african-american-achievements_files/David Blackwell.jpg){width=300px height=200px} ^[https://www.change.org/p/american-statistical-association-rename-the-fisher-lecture-after-david-blackwell]
+
+Each of the individuals represented in this dataset deserve far more recognition than a point on a graph. I unfortunately can't highlight each one of the 479 individuals, but I am choosing to highlight one outstanding individual who made enormous contributions to the field of statistics, David Blackwell.
+
+David Blackwell (1919-2010) made significant contributions to game theory, information theory, probability theory, and Bayesian statistics. He also contributed to the well-known Rao-Blackwell theorum, was the first African American professor to be tenured at U.C. Berkley, was the first African American to be inducted into the National Academy of Sciences, and was one of the first African Americans to earn a Ph.D., having done so at the impressive age of 22 years old! You can read more about him on [this wikipedia page](https://en.wikipedia.org/wiki/David_Blackwell) ^[https://en.wikipedia.org/wiki/David_Blackwell].
+
+Smith College Professor Miles Ott has started a petition to rename a prestigious statistics award, currently named the Fisher Lecture after Ronald Fisher who was openly racist and a proponent of eugenics and Social Darwinism, to be named after David Blackwell instead. Please sign the petition [here](https://www.change.org/p/american-statistical-association-rename-the-fisher-lecture-after-david-blackwell). 
