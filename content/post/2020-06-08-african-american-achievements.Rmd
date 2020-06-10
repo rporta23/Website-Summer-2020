@@ -5,7 +5,6 @@ date: '2020-06-08'
 slug: african-american-achievements
 categories: []
 tags: []
-draft: true
 ---
 
 In support of Black Lives Matter, this week's #TidyTuesday data highlights African American pioneers in many areas including entertainment, science, politics, military, sports, religion, law, and more between 1738 and 2019 ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-09/readme.md]. For each achievement, the data contains a summary of the achievement, the individual's name, the year of the achievement, the gender of the individual, and the broad category the achievement falls under. For a full list of the achievements, see [this wikipedia article](https://en.wikipedia.org/wiki/List_of_African-American_firsts) ^[https://en.wikipedia.org/wiki/List_of_African-American_first].
@@ -45,7 +44,7 @@ ggplot(firsts_summarized, aes(x = year, y = count)) +
 
 # African American Achievements by Category
 
-In order to analyze the distribution of these achievements across different facets of society, I created a barplot below representing the number of achievement in each designated category across the entire time period represented in the data. 
+In order to analyze the distribution of these achievements across different facets of society, I created a barplot below representing the number of achievements in each designated category across the entire time period represented in the data. 
 
 ```{r, echo = FALSE}
 
@@ -63,7 +62,7 @@ firsts$category <- factor(firsts$category,
 
 # calculate counts by category
 firsts_summarized_c <- firsts %>%  
-  group_by(year, category) %>% 
+  group_by(category) %>% 
   summarize(count = n()) 
 
 # create barplot of counts by category
@@ -111,6 +110,8 @@ Clearly and not surprisingly, significantly more of the achievements have been c
 
 The distributions by category are all fairly similar with the achievements in each category increasing significantly around 1950.
 
+A notable and somewhat concerning pattern, however, is that in most categories (and in the overall graphs above), the number of achievements seems to have dropped off in recent years, with achievements peaking around the late 1900s-early 2000s. This could indicate that since the Civil Rights Movement of the 1960s, we have gradually let civil rights slip to the back burner and have not made sufficient efforts to continue to make progress in expanding the voices of and opportunities for people of color. Hopefully the movement ignited by the tragic death of George Floyd will bring civil rights back to the forefront and keep it there. White supremacy is so deeply embedded in the roots of our society that we must work continuously to deconstruct not only interpersonal racism, but also the institutional and structural racism on which so many of our systems are based. 
+
 ```{r, echo = FALSE, message = FALSE}
 # filter by category
 firsts1 <- firsts %>% 
@@ -134,64 +135,63 @@ firsts8 <- firsts %>%
 ggplot(firsts1, aes(x = year)) +
   geom_dotplot(fill = "palevioletred") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Law, 1738-2019",
+  labs(title = "African American Achievements Over Time (1738-2019)",
+       subtitle = "Law",
        x = "Year",
        y = "Count")
 
 ggplot(firsts2, aes(x = year)) +
   geom_dotplot(fill = "darkolivegreen3") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Religion, 1738-2019",
+  labs(subtitle = "Religion",
        x = "Year",
        y = "Count")
 
 ggplot(firsts3, aes(x = year)) +
   geom_dotplot(fill = "steelblue1") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Sports, 1738-2019",
+  labs(
+       subtitle = "Sports",
        x = "Year",
        y = "Count")
 
 ggplot(firsts4, aes(x = year)) +
   geom_dotplot(fill = "lightgoldenrod") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Social & Jobs, 1738-2019",
+  labs(
+       subtitle = "Social & Jobs",
        x = "Year",
        y = "Count")
 
 ggplot(firsts5, aes(x = year)) +
   geom_dotplot(fill = "plum2") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Military, 1738-2019",
+  labs(
+       subtitle = "Military",
        x = "Year",
        y = "Count")
 
 ggplot(firsts6, aes(x = year)) +
   geom_dotplot(fill = "mediumpurple1") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Politics, 1738-2019",
+  labs(
+       subtitle = "Politics",
        x = "Year",
        y = "Count")
 
 ggplot(firsts7, aes(x = year)) +
   geom_dotplot(fill = "lightgreen") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Education & Science, 1738-2019",
+  labs(
+       subtitle = "Education & Science",
        x = "Year",
        y = "Count")
 
 ggplot(firsts8, aes(x = year)) +
   geom_dotplot(fill = "orange") +
   theme_bw() +
-  labs(title = "African American Achievements Over Time",
-       subtitle = "Arts & Entertainment, 1738-2019",
+  labs(
+       subtitle = "Arts & Entertainment",
        x = "Year",
        y = "Count")
 ```
@@ -205,3 +205,6 @@ Each of the individuals represented in this dataset deserve far more recognition
 David Blackwell (1919-2010) made significant contributions to game theory, information theory, probability theory, and Bayesian statistics. He also contributed to the well-known Rao-Blackwell theorum, was the first African American professor to be tenured at U.C. Berkley, was the first African American to be inducted into the National Academy of Sciences, and was one of the first African Americans to earn a Ph.D., having done so at the impressive age of 22 years old! You can read more about him on [this wikipedia page](https://en.wikipedia.org/wiki/David_Blackwell) ^[https://en.wikipedia.org/wiki/David_Blackwell].
 
 Smith College Professor Miles Ott has started a petition to rename a prestigious statistics award, currently named the Fisher Lecture after Ronald Fisher who was openly racist and a proponent of eugenics and Social Darwinism, to be named after David Blackwell instead. Please sign the petition [here](https://www.change.org/p/american-statistical-association-rename-the-fisher-lecture-after-david-blackwell). 
+
+The code used to generate this post is found [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-06-08-african-american-achievements.Rmd).
+
