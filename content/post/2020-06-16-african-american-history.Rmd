@@ -176,3 +176,5 @@ If you are able and willing to contribute to the cause of educating people about
 
 [Teaching Tolerance](https://www.tolerance.org/)
 
+The code used to generate this post is found [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-06-16-african-american-history.Rmd).
+
