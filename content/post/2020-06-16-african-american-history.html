@@ -1,0 +1,81 @@
+---
+title: African-American History
+author: Rose Porta
+date: '2020-06-16'
+slug: african-american-history
+categories: []
+tags: []
+draft: true
+---
+
+
+
+<div id="background-and-purpose" class="section level1">
+<h1>Background and Purpose</h1>
+<p>In honor of the week of Juneteenth, this week’s #TidyTuesday data contains information about the history of African-American slavery <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. Juneteenth (June 19th) is a holiday commemorating the day that a small subset of enslaved people in Texas, one of the last groups to hear the news, heard that they had been freed by the Emancipation Proclamation. Although freedom came little by little to different regions of the nation at different times and was not official until the 13th amendment was passed in December of 1965, the local blacks of the area in Texas decided on June 19th as their day of celebration, and the holiday gradually came to be recognized across the country <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<p>This day represents a monumental event in U.S. history ending the horrific institution in which humans “owned” other humans and treated them as property, and yet this holiday does not receive the widespread observance that it deserves. You can read more about the importance of Juneteenth <a href="https://www.blackpast.org/african-american-history/juneteenth-birth-african-american-holiday-2/">here</a> <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>and <a href="https://www.vox.com/identities/2018/6/19/17476482/juneteenth-holiday-emancipation-african-american-celebration-history">here</a> <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>, and you can sign the petition to make Juneteenth a national holiday <a href="https://www.change.org/p/united-states-congress-make-juneteenth-a-national-holiday-in-2020#:~:text=Make%20Juneteenth%20a%20National%20Holiday,Change.org&amp;text=After%20a%20video%20surfaced%20of,have%20been%20arrested%20and%20charged.">here</a>.</p>
+<p>Of course Africans were not the only people to have been enslaved, and the indiginous people of the Americas as well as the many other enslaves peoples also deserve acknowledgement. However, this post will focus on the enslavement of Africans specifically.</p>
+<p>Furthermore, numbers and graphs do not by any means tell the whole story of the cruelty of the slave trade and institution of slavery, and I encourage you to to educate yourself further. I will provide resources throughout as well as at the end of the post as a starting point. That being said, the purpose of this post is to highlight and recognize the vast numbers of individuals who were transported from their home countries and enslaved against their will. I hope that this will give you some perspective and allow you to imagine how enormous the impact of this institution was on the lives of millions of enslaved Africans as well as on the United States as a nation.</p>
+<p>The data is from a few separate sources, and contains information about the number of voyages transporting enslaved persons between 1514 and 1866 and how many people were on each voyage, information about individual Africans who were freed during forced transport between 1808 and 1862, and information about the numbers of whites, free blacks, and enslaved blacks in the United States between 1790 and 1870 <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
+</div>
+<div id="overview-of-transport-of-enslaved-persons-over-time" class="section level1">
+<h1>Overview of Transport of Enslaved Persons Over Time</h1>
+<p>In order to give a broad overview, I have created a time series plot below showing the trends in the number of voyages transporting enslaved individuals per year between 1514 and 1866. We can see that the numbers steadily increase starting in 1514 at the beginning of the era of colonization and peak and then start to decline around 1808 when the slave trade was made illegal in the U.S. In total, 36,110 voyages were recorded in this data set.</p>
+<p><img src="/post/2020-06-16-african-american-history_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+In order to emphasize the sheer number of individuals affected by the slave trade, I have created a plot below showing the cumulative number of individuals transported and forced into slavery over this time period. As the graph makes clear, over 5,000,000 individuals had been transported on slave ships by 1866. Furthermore, of the 36,110 voyages recorded, 17,746 of them have missing values for the number of individuals on the ship, so these observations are not included in the plot below. Therefore, there are likely many more individuals, possibly millions, who are not represented. We must also remember that the institution of slavery affected far more individuals than just those who were physically taken from their homes and enslaved– it also affected generations of individuals born into slavery as well as those who still face discrimination today as a result of this institution that formally ended over 100 years ago.</p>
+<p><img src="/post/2020-06-16-african-american-history_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+# Analysis of African Persons Freed During Forced Transport 1808-1862</p>
+<p>Even after the slave trade was outlawed in the U.S. in 1808, it continued for almost 60 more years. During this time, courts around the Atlantic basins intercepted several ships transporting enslaved people, freed the individuals, and recorded their names and some personal information about them.</p>
+<p>The time series plot below shows the overall trends in the number of individuals freed per year over this time period. It appears from the graph that these interceptions were relatively sporadic and did not follow a clear pattern over time. A total of 91,490 recorded individuals were freed in this way over this time period.</p>
+<p><img src="/post/2020-06-16-african-american-history_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div id="genderage-group-distribution" class="section level2">
+<h2>Gender/Age Group Distribution</h2>
+<p>The bar plot below analyzes the distribution of these freed individuals by gender and rough age group (child versus adult). It is clear that the majoriy of individuals freed were men, and this is likely because men were most sought-after as slaves, so they likely made up the majority of individuals on any given slave ship.</p>
+<p><img src="/post/2020-06-16-african-american-history_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="age-distribution" class="section level2">
+<h2>Age Distribution</h2>
+<p>The density plot below analyzes the age distribution of these freed individuals in more detail. Surprisingly, it appears that there was a large proportion of young children (around age 10-15) on these intercepted ships, and less surprisingly, a similarly large proportion of individuals in their 20s and 30s.</p>
+<p><img src="/post/2020-06-16-african-american-history_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+<div id="composition-of-u.s.-population-1790-1870" class="section level1">
+<h1>Composition of U.S. Population 1790-1870</h1>
+<p>Using the U.S. census data, I created a shiny app representing the composition of white, free black, and enslaved black individuals in different regions of the U.S. between 1790 and 1870 (link <a href="https://rporta.shinyapps.io/African-American-History/">here</a>) <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>.</p>
+<p>This period represents essentially the birth of the United States as an Independent Nation (Post-Revolutionary War) up until the end of the Civil War and the abolition of slavery (1865). I acknowledge that the composition of the nation was far more complex than what is represented by this data, and several racial/ethnic groups are not represented. And yet this visualization highlights whites and blacks in order to acknowledge the enormous numbers of enslaved persons during this time period and to represent the changes in these numbers in different regions over time.</p>
+<iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/African-American-History/">
+</iframe>
+<p>By moving the year slider, we can see that as the white population grows over time, the population of enslaved blacks grows proportionally, especially in the South. In any given year, the ratio of enslaved blacks to whites appears to be about 1:2 in the South. In other words, enslaved blacks made up about 1/3 of the total population in the South during this time period. The number of enslaved individuals reached its peak of about 7,500,000 in the South in 1860, the last census count before emancipation. I am assuming this data is not counting the population of the Confederacy as part of the total U.S. population during the Civil War period because the graphs show that there are about 7,500,000 enslaved blacks in the South in 1860, and only about 3,000,000 in the entire United States.</p>
+<p>In 1870, the graph makes it look as if the entire population of enslaved blacks (red bar) has magically become free blacks (green bar), which is technically what happened, as the 13th amendment officially freed all enslaved persons in 1865. However, we must remember that the transition to freedom was not that simple. Although emancipation was a huge milestone in U.S. history and definitely a moment to celebrate with Juneteenth being this week, we must remember that systems were put in place that essentially kept “freed” blacks in slavery for many years after emancipation, as blacks were given almost no support or resources to thrive in society. In fact, many whites were in support of a system to create a colony in Liberia to send away freed blacks during the early 1850s, signalling that blacks were not welcome or respected in American Society.</p>
+<p>To this day, our society relies on institutions rooted in oppression and white supremacy, and over 100 years after emancipation, black Americans still suffer from the legacy of slavery in the form of disproportionate police brutality, mass incarceration, poverty, and discrimination in employment, healthcare, and almost every facet of society.</p>
+<p>The code used to generate the shiny app is found <a href="https://github.com/rporta23/African-American-History-Shiny-App/blob/master/African-American-History/app.R">here</a>.</p>
+</div>
+<div id="additional-resources" class="section level1">
+<h1>Additional Resources</h1>
+<p>Here is a list of additional resources to learn more about how slavery still affects American society today and why it is important that every American have a solid understanding of this essential component of our past:</p>
+<p><a href="https://en.wikipedia.org/wiki/Slavery_in_the_United_States">Wikipedia Article on Slavery</a></p>
+<p><a href="https://www.blackpast.org/">BlackPast.org</a></p>
+<p><a href="https://www.theguardian.com/news/2019/aug/15/400-years-since-slavery-timeline">Guardian Article on Slavery</a></p>
+<p><a href="https://www.tolerance.org/sites/default/files/2018-02/TT-Teaching-Hard-History-American-Slavery-Report-WEB-February2018.pdf">Resource about teaching slavery in schools</a></p>
+<p><a href="https://www.tolerance.org/magazine/publications/teaching-hard-history-american-slavery">Teaching Tolerance Website</a></p>
+<p><a href="https://www.tolerance.org/frameworks/teaching-hard-history/american-slavery/key-concept-videos">Teaching Tolerance Educational Videos</a></p>
+<p>All resources compiled from the <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-16/readme.md">TidyTuesday github page</a>.</p>
+</div>
+<div id="where-to-donate" class="section level1">
+<h1>Where to Donate</h1>
+<p>If you are able and willing to contribute to the cause of educating people about African-American history and the history of slavery, an understanding of which is essential to our understanding of the racism that still persists in the U.S., here are a couple of organizations committed to providing education resources about these topics:</p>
+<p><a href="https://www.blackpast.org/donate/">BlackPast.org</a></p>
+<p><a href="https://www.tolerance.org/">Teaching Tolerance</a></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-16/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-16/readme.md</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.blackpast.org/african-american-history/juneteenth-birth-african-american-holiday-2/" class="uri">https://www.blackpast.org/african-american-history/juneteenth-birth-african-american-holiday-2/</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://www.blackpast.org/african-american-history/juneteenth-birth-african-american-holiday-2/" class="uri">https://www.blackpast.org/african-american-history/juneteenth-birth-african-american-holiday-2/</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://www.vox.com/identities/2018/6/19/17476482/juneteenth-holiday-emancipation-african-american-celebration-history" class="uri">https://www.vox.com/identities/2018/6/19/17476482/juneteenth-holiday-emancipation-african-american-celebration-history</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://www.census.gov/content/dam/Census/library/working-papers/2002/demo/POP-twps0056.pdf" class="uri">https://www.census.gov/content/dam/Census/library/working-papers/2002/demo/POP-twps0056.pdf</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://slavevoyages.org/" class="uri">https://slavevoyages.org/</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p><a href="https://rporta.shinyapps.io/African-American-History/" class="uri">https://rporta.shinyapps.io/African-American-History/</a><a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
