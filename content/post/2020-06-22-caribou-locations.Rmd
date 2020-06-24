@@ -1,12 +1,14 @@
 ---
 title: Caribou Locations
 author: Rose Porta
-date: '2020-06-22'
+date: '2020-06-24'
 slug: caribou-locations
 categories: []
 tags: []
-draft: true
+runtime: shiny
 ---
+
+![](/post/2020-06-22-caribou-locations_files/caribou.jpg){width=300px height=300px}^[http://outdoorswithothmarvohringer.blogspot.com/2014/03/will-bc-mountain-caribou-be-extinct-in.html]
 
 The woodland caribou is a North-American subspecies of reindeer that is classified as "Vulnerable" on the International Union for the Conservation of Nature's (IUCN) Red List as a result of the drastic decreases in population over the past few years ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-23/readme.md] ^[https://en.wikipedia.org/wiki/Boreal_woodland_caribou]. According to the report from a BC Ministry of Environment study, this population decline can be mainly attributed to increased predation of caribou by grey wolves at least partly resulting from disruption of habitat by human activities ^[B.C. Ministry of Environment. 2014. Science update for the South Peace Northern Caribou
 (Rangifer tarandus caribou pop. 15) in British Columbia. Victoria, BC. 43 pp.]. The report identifies energy production and mining as the most high-impact threats to caribou habitats and populations. The report identifies two ways in which these human activities can negatively affect caribou populations: (1) destruction of caribou natural high-elevation habitats force them to migrate to low-elevation habitats where more grey wolves and other predators live, and (2) introduction of non-native species to caribou environments can disrupt the entire ecosystem. For example, if more deer-like species are introduced into the environment, this increase in prey will attract more predators, which will actually increase the predation of caribou. It is necessary that we are aware of the impacts human activities are having on caribou populations in order to alter our harmful activities and save the caribou populations. A management plan for addressing this issue is outlined in the report referenced above. 
@@ -50,6 +52,7 @@ locations_summarized2 <- locations %>%
 
 # assign study sites to specific colors
 # from stack overflow: https://stackoverflow.com/questions/30789837/assign-specific-colors-to-specific-values
+
 locations$study_site = factor(locations$study_site, levels = c("Graham", "Burnt Pine", "Hart Ranges", "Kennedy", "Moberly", "Narraway",    "Quintette", "Scott"))
 
 col <- setNames(c( "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00"), levels(locations$study_site))
@@ -75,7 +78,8 @@ plot2 <- ggplot(locations_summarized2, aes(x = year, y = count, color = study_si
        color = "Regional Group Name"
        ) +
   # legend sizing code from        https://www.datanovia.com/en/blog/how-to-change-ggplot-legend-size/
-  theme(legend.text = element_text(size = 8))
+  theme(legend.text = element_text(size = 8)) +
+  theme_bw()
 
 plot1
 plot2
@@ -91,3 +95,7 @@ As we move the year slider from left to right, we can see the introduction of th
 <iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/Caribou-Locations/"> </iframe>
 
 The code to generate the shiny app is [here](https://github.com/rporta23/Caribou-Locations-App/blob/master/Caribou-Locations/app.R).
+
+The code used to generate this post is [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-06-22-caribou-locations.Rmd).
+
+![](/post/2020-06-22-caribou-locations_files/Caribou-banner.png){width=500px height=300px} ^[https://cpawsbc.org/caribou/]
