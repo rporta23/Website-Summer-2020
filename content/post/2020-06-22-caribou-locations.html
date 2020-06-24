@@ -1,0 +1,38 @@
+---
+title: Caribou Locations
+author: Rose Porta
+date: '2020-06-22'
+slug: caribou-locations
+categories: []
+tags: []
+draft: true
+---
+
+
+
+<p>The woodland caribou is a North-American subspecies of reindeer that is classified as “Vulnerable” on the International Union for the Conservation of Nature’s (IUCN) Red List as a result of the drastic decreases in population over the past few years <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. According to the report from a BC Ministry of Environment study, this population decline can be mainly attributed to increased predation of caribou by grey wolves at least partly resulting from disruption of habitat by human activities <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. The report identifies energy production and mining as the most high-impact threats to caribou habitats and populations. The report identifies two ways in which these human activities can negatively affect caribou populations: (1) destruction of caribou natural high-elevation habitats force them to migrate to low-elevation habitats where more grey wolves and other predators live, and (2) introduction of non-native species to caribou environments can disrupt the entire ecosystem. For example, if more deer-like species are introduced into the environment, this increase in prey will attract more predators, which will actually increase the predation of caribou. It is necessary that we are aware of the impacts human activities are having on caribou populations in order to alter our harmful activities and save the caribou populations. A management plan for addressing this issue is outlined in the report referenced above.</p>
+<p>This week’s #TidyTuesday data is from a recent study by the B.C. Ministry of Environment &amp; Climate Change that tracked caribou locations from 1988 to 2016 in the Canadian province of British Columbia <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. The data includes 249,450 location tags identifying 286 unique carabou over this timeframe. For each observation, there is information identifying the unique animal, the date and time of the measurement, the location of the animal (latitude and longitude), the regional group name (site or colony of deployment or the location-related group name such as the name of the herd or pack), and the season.</p>
+<div id="change-in-british-columbia-caribou-population-over-time" class="section level1">
+<h1>Change in British Columbia Caribou Population Over Time</h1>
+<p>In order to provide a broad overview of the change in the caribou population between 1988 and 2016, I have created two time series plots below. The first represents the overall change in the population, and the second shows the change in population for each regional group specifically.</p>
+<p>Based on the first graph, it appears that the carabou population has gone up and down over this timeframe, most recently having peaked around 2008 and then declined pretty steeply since then. I am wondering if any specific series of events triggered the rapid growth in the population between roughly 2005 and 2008 and then the sharp decline after 2008.</p>
+<p>The second plot shows that the Hart Ranges regional group was the first to reside in this area and was the only regional group until about 2000 when the Graham group became predominate followed by the Quintette and Kennedy groups. I am wondering if the introduction of these other regional groups into this area had anything to do with human activities forcing these groups out of their native habitats and into this region. Although the individual populations have fluctuated, it is clear that the population of each group has sharply declined in recent years.</p>
+<p><img src="/post/2020-06-22-caribou-locations_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="/post/2020-06-22-caribou-locations_files/figure-html/unnamed-chunk-2-2.png" width="672" />
+# Interactive Map of Caribou Movement Over Time</p>
+<p>In order to analyze the movement of different regional groups over time, I have created an interactive map below visualizing caribou locations by regional group year by year. There is also an option to filter by season (winter or summer). The link to the shiny app is <a href="https://rporta.shinyapps.io/Caribou-Locations/">here</a>. If the map is not showing up below, try refreshing the page.</p>
+<p>As we move the year slider from left to right, we can see the introduction of the new regional groups after around 2001, the peak in the population around 2009, and the decline in the population in the most recent years. Darker/less transparent points/clusters represent a higher concentration of caribou in the area.</p>
+<p><a href="https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html">This online tutorial</a> was very helpful in learning how to build this map.</p>
+<iframe height="800" width="100%" frameborder="no" src="https://rporta.shinyapps.io/Caribou-Locations/">
+</iframe>
+<p>The code to generate the shiny app is <a href="https://github.com/rporta23/Caribou-Locations-App/blob/master/Caribou-Locations/app.R">here</a>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-23/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-23/readme.md</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://en.wikipedia.org/wiki/Boreal_woodland_caribou" class="uri">https://en.wikipedia.org/wiki/Boreal_woodland_caribou</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>B.C. Ministry of Environment. 2014. Science update for the South Peace Northern Caribou
+(Rangifer tarandus caribou pop. 15) in British Columbia. Victoria, BC. 43 pp.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Seip DR, Price E (2019) Data from: Science update for the South Peace Northern Caribou (Rangifer tarandus caribou pop. 15) in British Columbia. Movebank Data Repository. <a href="https://doi.org/10.5441/001/1.p5bn656k" class="uri">https://doi.org/10.5441/001/1.p5bn656k</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
