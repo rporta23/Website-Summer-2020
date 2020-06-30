@@ -6,10 +6,19 @@
     <description>Recent content on Rose Porta</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 24 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 29 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Claremont Run of X-Men</title>
+      <link>/2020/06/29/claremont-run-of-x-men/</link>
+      <pubDate>Mon, 29 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/06/29/claremont-run-of-x-men/</guid>
+      <description># assign events to specific colors # from stack overflow: https://stackoverflow.com/questions/30789837/assign-specific-colors-to-specific-values characters_tidy$event = factor(characters_tidy$event, levels = c(&amp;quot;rendered_unconcious&amp;quot;, &amp;quot;initiates_physical_conflict&amp;quot;, &amp;quot;captured&amp;quot;, &amp;quot;clothing_torn&amp;quot;, &amp;quot;depowered&amp;quot;, &amp;quot;declared_dead&amp;quot;, &amp;quot;number_of_kills_non_humans&amp;quot;, &amp;quot;number_of_kills_humans&amp;quot;, &amp;quot;subject_to_torture&amp;quot;)) col &amp;lt;- setNames(c( &amp;quot;#8dd3c7&amp;quot;, &amp;quot;#ffffb3&amp;quot;, &amp;quot;#bebada&amp;quot;, &amp;quot;#fb8072&amp;quot;, &amp;quot;#80b1d3&amp;quot;, &amp;quot;#fdb462&amp;quot;, &amp;quot;#b3de69&amp;quot;, &amp;quot;#fccde5&amp;quot;, &amp;quot;#d9d9d9&amp;quot;), levels(characters_tidy$event)) # create barplot of total number of occurences by event ggplot(characters_summarized, aes(x = event, y = sum, fill = event)) + geom_col(show.legend = FALSE) + coord_flip() + theme(axis.text.x = element_text(angle = 90)) + scale_fill_manual(values = col) + theme_dark() + labs(title = &amp;quot;Total Violent Events by Category&amp;quot;, subtitle = &amp;quot;Claremont Uncanny X-Men Books 1975-1991&amp;quot;, x = &amp;quot;Event&amp;quot;, y = &amp;quot;Total Number of Occurances&amp;quot;) # create boxplot of distribution for each event ggplot(characters_tidy, aes(x = event, y = count, color = event))+ geom_boxplot(show.</description>
+    </item>
     
     <item>
       <title>Caribou Locations</title>

@@ -1,0 +1,127 @@
+---
+title: Claremont Run of X-Men
+author: Rose Porta
+date: '2020-06-29'
+slug: claremont-run-of-x-men
+categories: []
+tags: []
+draft: true
+---
+
+Uncanny X-Men is a comic book series by Chris Claremont that was extremely popular between 1975 and 1991. Several versions of X-Men comic books have been published, the first series having been launced in 1963, and yet the version titled 'Uncanny X-Men' was the longest run of any mainstream superhero writer on one title ^[https://en.wikipedia.org/wiki/Uncanny_X-Men#1975%E2%80%931991:_Chris_Claremont_era] ^[http://www.claremontrun.com/Foreword.html]. The plot is based on a team of mutant superheros who gained their superpowers by having been born with an "X-Gene" ^[https://en.wikipedia.org/wiki/X-Men]. This comic series is historically significant not only because it was so popular and long-lived, but also because it addressed several social justice issues.
+```{r, echo = FALSE, include = FALSE}
+# read in data
+comic_bechdel <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/comic_bechdel.csv')
+
+characters <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/characters.csv')
+
+xmen_bechdel <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/xmen_bechdel.csv')
+
+
+# load packages
+library(tidyverse)
+library(scales)
+```
+
+```{r, echo = FALSE, include = FALSE}
+# convert characters data to tidy format
+# remove extremely unusual observation of 5000000004-- must be a typo?
+characters_tidy <- characters %>% 
+  mutate(initiates_physical_conflict = as.numeric(initiates_physical_conflict)) %>% 
+  pivot_longer(names_to = "event", 
+               values_to = "count",
+               cols = rendered_unconcious:initiates_physical_conflict) %>% 
+  select(issue, event, count) %>% 
+  filter(count != "NA") %>% 
+  filter(count < 5000) %>% 
+  filter(event != "redressed",  event != "quits_team",  event != "surrenders")
+
+characters_summarized <- characters_tidy %>% 
+  group_by(event) %>% 
+  summarize(sum = sum(count)) %>% 
+  mutate(event = reorder(event, sum))
+```
+
+
+```{r, echo = FALSE}
+# assign events to specific colors
+# from stack overflow: https://stackoverflow.com/questions/30789837/assign-specific-colors-to-specific-values
+
+characters_tidy$event = factor(characters_tidy$event, levels = c("rendered_unconcious", "initiates_physical_conflict", "captured", "clothing_torn", "depowered", "declared_dead", "number_of_kills_non_humans", "number_of_kills_humans", "subject_to_torture"))
+
+col <- setNames(c( "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9"), levels(characters_tidy$event))
+
+# create barplot of total number of occurences by event
+ggplot(characters_summarized, aes(x = event, y = sum, fill = event)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_fill_manual(values = col) +
+  theme_dark() +
+  labs(title = "Total Violent Events by Category",
+       subtitle = "Claremont Uncanny X-Men Books 1975-1991",
+       x = "Event",
+       y = "Total Number of Occurances")
+```
+
+```{r, echo = FALSE}
+# create boxplot of distribution for each event
+ggplot(characters_tidy, aes(x = event, y = count, color = event))+
+  geom_boxplot(show.legend = FALSE) +
+  coord_flip() +
+  scale_color_manual(values = col) +
+  theme_dark() +
+  labs(title = "Distribution of Violent Events by Category",
+       subtitle = "Claremont Uncanny X-Men Books 1975-1991",
+       x = "Event",
+       y = "Number of Occurances Per Character")
+```
+
+```{r, echo = FALSE}
+# calculate proportion passed brecdel for xmen
+xmen_bechdel_prop <- xmen_bechdel %>% 
+  filter(!is.na(pass_bechdel)) %>%
+  mutate(count = n()) %>% 
+  group_by(pass_bechdel) %>% 
+  summarize(count_group = n(), 
+         prop = count_group/count[1], 
+         percent = round(prop * 100)) %>% 
+  mutate(series = "Uncanny X-Men")
+
+# percent breaks code from: https://stackoverflow.com/questions/24776200/ggplot-replace-count-with-percentage-in-geom-bar/48602277
+
+brks <- c(0, 0.25, 0.5, 0.75, 1)
+
+# calculate proportion passed brechdel for other series and join to xmen
+comic_bechdel <- comic_bechdel %>% 
+  filter(!is.na(pass_bechdel)) %>% 
+  group_by(series) %>% 
+  mutate(count = n()) %>% 
+  group_by(series, pass_bechdel) %>% 
+  summarize(count_group = n(), 
+         prop = count_group/count[1], 
+         percent = round(prop * 100))  %>% 
+  full_join(xmen_bechdel_prop, 
+            by = c("series", "pass_bechdel", "count_group", "prop", "percent")) 
+
+# plot proportions
+ggplot(comic_bechdel, aes(x = series, 
+                          y = prop, 
+                          fill = pass_bechdel)) +
+  geom_bar(position = "fill", stat = "identity") +
+  scale_y_continuous(breaks = brks, labels = scales::percent(brks)) +
+  scale_fill_manual(values = c("palevioletred1", "darkseagreen2")) +
+  coord_flip() +
+  labs(
+    title = "Percentage of Issues Passing the Bechdel Test by Series",
+    y = "Percentage",
+    x = "Series",
+    fill = "Passed?"
+    ) +
+  theme_dark()
+  
+```
+
+
+
+

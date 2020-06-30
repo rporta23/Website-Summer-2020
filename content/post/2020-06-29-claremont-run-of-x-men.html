@@ -1,0 +1,86 @@
+---
+title: Claremont Run of X-Men
+author: Rose Porta
+date: '2020-06-29'
+slug: claremont-run-of-x-men
+categories: []
+tags: []
+---
+
+
+
+<pre class="r"><code># assign events to specific colors
+# from stack overflow: https://stackoverflow.com/questions/30789837/assign-specific-colors-to-specific-values
+
+characters_tidy$event = factor(characters_tidy$event, levels = c(&quot;rendered_unconcious&quot;, &quot;initiates_physical_conflict&quot;, &quot;captured&quot;, &quot;clothing_torn&quot;, &quot;depowered&quot;, &quot;declared_dead&quot;, &quot;number_of_kills_non_humans&quot;, &quot;number_of_kills_humans&quot;, &quot;subject_to_torture&quot;))
+
+col &lt;- setNames(c( &quot;#8dd3c7&quot;, &quot;#ffffb3&quot;, &quot;#bebada&quot;, &quot;#fb8072&quot;, &quot;#80b1d3&quot;, &quot;#fdb462&quot;, &quot;#b3de69&quot;, &quot;#fccde5&quot;, &quot;#d9d9d9&quot;), levels(characters_tidy$event))
+
+# create barplot of total number of occurences by event
+ggplot(characters_summarized, aes(x = event, y = sum, fill = event)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_fill_manual(values = col) +
+  theme_dark() +
+  labs(title = &quot;Total Violent Events by Category&quot;,
+       subtitle = &quot;Claremont Uncanny X-Men Books 1975-1991&quot;,
+       x = &quot;Event&quot;,
+       y = &quot;Total Number of Occurances&quot;)</code></pre>
+<p><img src="/post/2020-06-29-claremont-run-of-x-men_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># create boxplot of distribution for each event
+ggplot(characters_tidy, aes(x = event, y = count, color = event))+
+  geom_boxplot(show.legend = FALSE) +
+  coord_flip() +
+  scale_color_manual(values = col) +
+  theme_dark() +
+  labs(title = &quot;Distribution of Violent Events by Category&quot;,
+       subtitle = &quot;Claremont Uncanny X-Men Books 1975-1991&quot;,
+       x = &quot;Event&quot;,
+       y = &quot;Number of Occurances Per Character&quot;)</code></pre>
+<p><img src="/post/2020-06-29-claremont-run-of-x-men_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># calculate proportion passed brecdel for xmen
+xmen_bechdel_prop &lt;- xmen_bechdel %&gt;% 
+  filter(!is.na(pass_bechdel)) %&gt;%
+  mutate(count = n()) %&gt;% 
+  group_by(pass_bechdel) %&gt;% 
+  summarize(count_group = n(), 
+         prop = count_group/count[1], 
+         percent = round(prop * 100)) %&gt;% 
+  mutate(series = &quot;Uncanny X-Men&quot;)
+
+# percent breaks code from: https://stackoverflow.com/questions/24776200/ggplot-replace-count-with-percentage-in-geom-bar/48602277
+
+brks &lt;- c(0, 0.25, 0.5, 0.75, 1)
+
+# calculate proportion passed brechdel for other series and join to xmen
+comic_bechdel &lt;- comic_bechdel %&gt;% 
+  filter(!is.na(pass_bechdel)) %&gt;% 
+  group_by(series) %&gt;% 
+  mutate(count = n()) %&gt;% 
+  group_by(series, pass_bechdel) %&gt;% 
+  summarize(count_group = n(), 
+         prop = count_group/count[1], 
+         percent = round(prop * 100))  %&gt;% 
+  full_join(xmen_bechdel_prop, 
+            by = c(&quot;series&quot;, &quot;pass_bechdel&quot;, &quot;count_group&quot;, &quot;prop&quot;, &quot;percent&quot;)) #%&gt;% 
+  #plyr::ddply(.(series), transform, pos = cumsum(prop) - (0.5 * percentage))
+
+# plot proportions
+ggplot(comic_bechdel, aes(x = series, 
+                          y = prop, 
+                          fill = pass_bechdel)) +
+  geom_bar(position = &quot;fill&quot;, stat = &quot;identity&quot;) +
+  geom_text(aes(label = paste0(percent,&quot;%&quot;)), 
+            size=4) +
+  scale_y_continuous(breaks = brks, labels = scales::percent(brks)) +
+  scale_fill_manual(values = c(&quot;palevioletred1&quot;, &quot;darkseagreen2&quot;)) +
+  coord_flip() +
+  labs(
+    title = &quot;Percentage of Issues Passing the Bechdel Test by Series&quot;,
+    y = &quot;Percentage&quot;,
+    x = &quot;Series&quot;,
+    fill = &quot;Passed?&quot;
+    ) +
+  theme_dark()</code></pre>
+<p><img src="/post/2020-06-29-claremont-run-of-x-men_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
