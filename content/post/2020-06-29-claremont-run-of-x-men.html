@@ -5,82 +5,41 @@ date: '2020-06-29'
 slug: claremont-run-of-x-men
 categories: []
 tags: []
+draft: true
 ---
 
 
 
-<pre class="r"><code># assign events to specific colors
-# from stack overflow: https://stackoverflow.com/questions/30789837/assign-specific-colors-to-specific-values
-
-characters_tidy$event = factor(characters_tidy$event, levels = c(&quot;rendered_unconcious&quot;, &quot;initiates_physical_conflict&quot;, &quot;captured&quot;, &quot;clothing_torn&quot;, &quot;depowered&quot;, &quot;declared_dead&quot;, &quot;number_of_kills_non_humans&quot;, &quot;number_of_kills_humans&quot;, &quot;subject_to_torture&quot;))
-
-col &lt;- setNames(c( &quot;#8dd3c7&quot;, &quot;#ffffb3&quot;, &quot;#bebada&quot;, &quot;#fb8072&quot;, &quot;#80b1d3&quot;, &quot;#fdb462&quot;, &quot;#b3de69&quot;, &quot;#fccde5&quot;, &quot;#d9d9d9&quot;), levels(characters_tidy$event))
-
-# create barplot of total number of occurences by event
-ggplot(characters_summarized, aes(x = event, y = sum, fill = event)) +
-  geom_col(show.legend = FALSE) +
-  coord_flip() +
-  theme(axis.text.x = element_text(angle = 90)) +
-  scale_fill_manual(values = col) +
-  theme_dark() +
-  labs(title = &quot;Total Violent Events by Category&quot;,
-       subtitle = &quot;Claremont Uncanny X-Men Books 1975-1991&quot;,
-       x = &quot;Event&quot;,
-       y = &quot;Total Number of Occurances&quot;)</code></pre>
+<p><img src="/post/2020-06-29-claremont-run-of-x-men_files/xmen.jpg" width="250" height="400" /> <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Uncanny X-Men is a comic book series by Chris Claremont that was extremely popular between 1975 and 1991. Several versions of X-Men comic books have been published with the first series having been launched in 1963, and yet the version titled ‘Uncanny X-Men’ was the longest run of any mainstream superhero writer on one title <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. The plot is based on a team of mutant superheros who gained their superpowers by having been born with an “X-Gene” <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. This comic series is historically significant not only because it was so popular and long-lived, but also because it addressed several social justice issues including racism, Anti-Semitism, and LGBT rights, among others, through metaphors involving interactions between the “mutants” and the “normal humans” <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>.</p>
+<p>This week’s #TidyTuesday data comes from The Claremont Run project, which explores the sixteen year run (1975-1991) of Uncanny X-Men by Claremont, specifically through the lense of how the series impacted the portrayal of gender and sexuality in comics, and more broadly in media as a whole <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> <a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>. The data includes information about the actions of each character as well as whether or not each issue passed the brechdel test, a test that measures the representation of women in fiction. In order to pass the bechdel test, the work must feature at least two women who talk to each other about something other than a man. Sometimes the requirement also includes that the women be named <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>. I have used this data to explore violence within the Uncanny X-Men books as well as the representation of women in several comic series including the Uncanny X-Men.</p>
+<p>You can find The Claremont Run project on twitter <a href="https://twitter.com/ClaremontRun">here</a>. Special thanks to <a href="https://twitter.com/malco_barrett">Malcom Barret</a> for putting these data sets into the R package claremontrun.</p>
+<div id="analysis-of-violence-in-uncanny-x-men" class="section level1">
+<h1>Analysis of Violence in Uncanny X-Men</h1>
+<p>When looking at the data on character behavior, I noticed several mentions of violence including “rendered unconscious”, “killed humans”, “killed non-humans”, and “initiated physical conflict”. In order to analyze just how prevalent this violent activity was, I created two plots below. The first adds up the total number of occurrences of each event over all issues, and the second compares the distributions of the number of times each event occurred per issue. For context, the data includes observations from 545 issues and 23 characters.</p>
+<p>From the barplot, it seems as if violent events are fairly prevalent– especially a character being rendered unconscious, which happened 257 times over 545 issues, with the number of occurrences of the initiation of physical conflict not being far behind. However, when we look at the distributions of how many times each event occurred per issue, the median for each event is low (1 or 0). Each event does have a wide range with several outliers on the higher end. The maximum number of occurrences in a single issue for any one event is 10 (killing of non-humans), which is farily high. It should be noted that I have removed an observation of 5,000,000,004 that was recorded for killing of non-humans because it seems impossible for that large of a number of occurrences to happen in a single issue, so I am assuming that was a typo.</p>
 <p><img src="/post/2020-06-29-claremont-run-of-x-men_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<pre class="r"><code># create boxplot of distribution for each event
-ggplot(characters_tidy, aes(x = event, y = count, color = event))+
-  geom_boxplot(show.legend = FALSE) +
-  coord_flip() +
-  scale_color_manual(values = col) +
-  theme_dark() +
-  labs(title = &quot;Distribution of Violent Events by Category&quot;,
-       subtitle = &quot;Claremont Uncanny X-Men Books 1975-1991&quot;,
-       x = &quot;Event&quot;,
-       y = &quot;Number of Occurances Per Character&quot;)</code></pre>
 <p><img src="/post/2020-06-29-claremont-run-of-x-men_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<pre class="r"><code># calculate proportion passed brecdel for xmen
-xmen_bechdel_prop &lt;- xmen_bechdel %&gt;% 
-  filter(!is.na(pass_bechdel)) %&gt;%
-  mutate(count = n()) %&gt;% 
-  group_by(pass_bechdel) %&gt;% 
-  summarize(count_group = n(), 
-         prop = count_group/count[1], 
-         percent = round(prop * 100)) %&gt;% 
-  mutate(series = &quot;Uncanny X-Men&quot;)
-
-# percent breaks code from: https://stackoverflow.com/questions/24776200/ggplot-replace-count-with-percentage-in-geom-bar/48602277
-
-brks &lt;- c(0, 0.25, 0.5, 0.75, 1)
-
-# calculate proportion passed brechdel for other series and join to xmen
-comic_bechdel &lt;- comic_bechdel %&gt;% 
-  filter(!is.na(pass_bechdel)) %&gt;% 
-  group_by(series) %&gt;% 
-  mutate(count = n()) %&gt;% 
-  group_by(series, pass_bechdel) %&gt;% 
-  summarize(count_group = n(), 
-         prop = count_group/count[1], 
-         percent = round(prop * 100))  %&gt;% 
-  full_join(xmen_bechdel_prop, 
-            by = c(&quot;series&quot;, &quot;pass_bechdel&quot;, &quot;count_group&quot;, &quot;prop&quot;, &quot;percent&quot;)) #%&gt;% 
-  #plyr::ddply(.(series), transform, pos = cumsum(prop) - (0.5 * percentage))
-
-# plot proportions
-ggplot(comic_bechdel, aes(x = series, 
-                          y = prop, 
-                          fill = pass_bechdel)) +
-  geom_bar(position = &quot;fill&quot;, stat = &quot;identity&quot;) +
-  geom_text(aes(label = paste0(percent,&quot;%&quot;)), 
-            size=4) +
-  scale_y_continuous(breaks = brks, labels = scales::percent(brks)) +
-  scale_fill_manual(values = c(&quot;palevioletred1&quot;, &quot;darkseagreen2&quot;)) +
-  coord_flip() +
-  labs(
-    title = &quot;Percentage of Issues Passing the Bechdel Test by Series&quot;,
-    y = &quot;Percentage&quot;,
-    x = &quot;Series&quot;,
-    fill = &quot;Passed?&quot;
-    ) +
-  theme_dark()</code></pre>
+</div>
+<div id="representation-of-females-in-comics" class="section level1">
+<h1>Representation of Females in Comics</h1>
+<p>The plot below represents the proportions of recorded issues that passed the bechdel test for several comic series. For the majority of comic series (6/8), less than 50% of the issues passed the test. Although this measure is obviously subjective and imperfect, these results indicate that many comic series’ are male focused and do not represent males and females proportionately. There was even one series, Daredevil, where every single issue (100%) failed the test.</p>
+<p>The one series that goes way in the opposite direction is Sensational She-Hulk. I am not familiar with the series, and just by the title it seems as if the series is geared toward female empowerment, so it makes sense that over 75% of its issues passed the bechdel test.</p>
+<p>The Uncanny X-Men is the only other comic series recorded having over 50% of its issues passing the bechdel test, and it barely meets this threshold (52%). I am not surprised that it scored this highly given that equality and acceptance are major themes throughout the series, and yet I would think that an even higher percentage of its issues would have passed. The title does elicit a masculine-dominated vibe given that its “X-Men” not “X-Women”, and yet the series addresses issues relating to gender fluidity and transgender rights among many other challenges faced by minority populations. For this reason, I am surprised that 48% of the issues do not even include two women having a conversation about something other than a man, which seems like a low threshold for proportionately representing women.</p>
 <p><img src="/post/2020-06-29-claremont-run-of-x-men_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The code used to generate this post is found <a href="https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-06-29-claremont-run-of-x-men.Rmd">here</a>.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://store.dreamlandcomics.com/uncanny-x-men-157-newsstand-edition-near-mint-minus-92-marvel-comic-p114949.aspx" class="uri">https://store.dreamlandcomics.com/uncanny-x-men-157-newsstand-edition-near-mint-minus-92-marvel-comic-p114949.aspx</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://en.wikipedia.org/wiki/Uncanny_X-Men#1975%E2%80%931991:_Chris_Claremont_era" class="uri">https://en.wikipedia.org/wiki/Uncanny_X-Men#1975%E2%80%931991:_Chris_Claremont_era</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><a href="http://www.claremontrun.com/Foreword.html" class="uri">http://www.claremontrun.com/Foreword.html</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://en.wikipedia.org/wiki/X-Men" class="uri">https://en.wikipedia.org/wiki/X-Men</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://en.wikipedia.org/wiki/X-Men#Reflecting_social_issues" class="uri">https://en.wikipedia.org/wiki/X-Men#Reflecting_social_issues</a><a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p><a href="http://www.claremontrun.com/" class="uri">http://www.claremontrun.com/</a><a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p><a href="http://www.claremontrun.com/Data.html" class="uri">http://www.claremontrun.com/Data.html</a><a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p><a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-30/readme.md" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-30/readme.md</a><a href="#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p><a href="https://en.wikipedia.org/wiki/Bechdel_test" class="uri">https://en.wikipedia.org/wiki/Bechdel_test</a><a href="#fnref9" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
