@@ -1,18 +1,17 @@
 ---
 title: Claremont Run of X-Men
 author: Rose Porta
-date: '2020-06-29'
+date: '2020-07-01'
 slug: claremont-run-of-x-men
 categories: []
 tags: []
-draft: true
 ---
 
 ![](/post/2020-06-29-claremont-run-of-x-men_files/xmen.jpg){width=250px height=400px} ^[https://store.dreamlandcomics.com/uncanny-x-men-157-newsstand-edition-near-mint-minus-92-marvel-comic-p114949.aspx]
 
 Uncanny X-Men is a comic book series by Chris Claremont that was extremely popular between 1975 and 1991. Several versions of X-Men comic books have been published with the first series having been launched in 1963, and yet the version titled 'Uncanny X-Men' was the longest run of any mainstream superhero writer on one title ^[https://en.wikipedia.org/wiki/Uncanny_X-Men#1975%E2%80%931991:_Chris_Claremont_era] ^[http://www.claremontrun.com/Foreword.html]. The plot is based on a team of mutant superheros who gained their superpowers by having been born with an "X-Gene" ^[https://en.wikipedia.org/wiki/X-Men]. This comic series is historically significant not only because it was so popular and long-lived, but also because it addressed several social justice issues including racism, Anti-Semitism, and LGBT rights, among others, through metaphors involving interactions between the "mutants" and the "normal humans" ^[https://en.wikipedia.org/wiki/X-Men#Reflecting_social_issues]. 
 
-This week's #TidyTuesday data comes from The Claremont Run project, which explores the sixteen year run (1975-1991) of Uncanny X-Men by Claremont, specifically through the lense of how the series impacted the portrayal of gender and sexuality in comics, and more broadly in media as a whole ^[http://www.claremontrun.com/] ^[http://www.claremontrun.com/Data.html] ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-30/readme.md]. The data includes information about the actions of each character as well as whether or not each issue passed the brechdel test, a test that measures the representation of women in fiction. In order to pass the bechdel test, the work must feature at least two women who talk to each other about something other than a man. Sometimes the requirement also includes that the women be named ^[https://en.wikipedia.org/wiki/Bechdel_test]. I have used this data to explore violence within the Uncanny X-Men books as well as the representation of women in several comic series including the Uncanny X-Men. 
+This week's #TidyTuesday data comes from The Claremont Run project, which explores the sixteen year run (1975-1991) of Uncanny X-Men by Claremont, specifically through the lense of how the series impacted the portrayal of gender and sexuality in comics, and more broadly in media as a whole ^[http://www.claremontrun.com/] ^[http://www.claremontrun.com/Data.html] ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-30/readme.md]. The data includes information about the actions of each character as well as whether or not each issue passed the Bechdel test, a test that measures the representation of women in fiction. In order to pass the Bechdel test, the work must feature at least two women who talk to each other about something other than a man. Sometimes the requirement also includes that the women be named ^[https://en.wikipedia.org/wiki/Bechdel_test]. I have used this data to explore violence within the Uncanny X-Men books as well as the representation of women in several comic series including the Uncanny X-Men. 
 
 You can find The Claremont Run project on twitter [here](https://twitter.com/ClaremontRun). Special thanks to [Malcom Barret](https://twitter.com/malco_barrett) for putting these data sets into the R package claremontrun. 
 
@@ -21,6 +20,7 @@ You can find The Claremont Run project on twitter [here](https://twitter.com/Cla
 When looking at the data on character behavior, I noticed several mentions of violence including "rendered unconscious", "killed humans", "killed non-humans", and "initiated physical conflict". In order to analyze just how prevalent this violent activity was, I created two plots below. The first adds up the total number of occurrences of each event over all issues, and the second compares the distributions of the number of times each event occurred per issue. For context, the data includes observations from 545 issues and 23 characters. 
 
 From the barplot, it seems as if violent events are fairly prevalent-- especially a character being rendered unconscious, which happened 257 times over 545 issues, with the number of occurrences of the initiation of physical conflict not being far behind. However, when we look at the distributions of how many times each event occurred per issue, the median for each event is low (1 or 0). Each event does have a wide range with several outliers on the higher end. The maximum number of occurrences in a single issue for any one event is 10 (killing of non-humans), which is farily high. It should be noted that I have removed an observation of 5,000,000,004 that was recorded for killing of non-humans because it seems impossible for that large of a number of occurrences to happen in a single issue, so I am assuming that was a typo.
+
 
 ```{r, echo = FALSE, include = FALSE}
 # read in data
@@ -96,13 +96,17 @@ ggplot(characters_tidy2, aes(x = event, y = sum, color = event))+
        y = "Number of Occurrences Per Issue")
 ```
 
+Although it may seem in poor judgement to include so much violence, conflict within the series between "mutants" and "normal humans" was often used to represent real world conflicts as minority groups have struggled for equality throughout history ^[https://en.wikipedia.org/wiki/X-Men#Political_warfare]. For example, one comic in the 1980s featured "mutants" being segregated and enslaved by "normal humans" on a fictional island, and this plot line can be seen as a reference to apartheid in South Africa ^[https://en.wikipedia.org/wiki/X-Men#Reflecting_social_issues]. Thus, these brutal actions may have been intentionally included to emphasize the brutality faced by minority groups. 
+
 # Representation of Females in Comics
 
-The plot below represents the proportions of recorded issues that passed the bechdel test for several comic series. For the majority of comic series (6/8), less than 50% of the issues passed the test. Although this measure is obviously subjective and imperfect, these results indicate that many comic series' are male focused and do not represent males and females proportionately. There was even one series, Daredevil, where every single issue (100%) failed the test.
+The plot below represents the proportions of recorded issues that passed the Bechdel test for several comic series. For the majority of comic series (6/8), less than 50% of the issues passed the test. Although this measure is obviously subjective and imperfect, these results indicate that many comic series' are male focused and do not represent males and females proportionately. There was even one series, Daredevil, where every single issue (100%) failed the test.
 
-The one series that goes way in the opposite direction is Sensational She-Hulk. I am not familiar with the series, and just by the title it seems as if the series is geared toward female empowerment, so it makes sense that over 75% of its issues passed the bechdel test. 
+The one series that goes way in the opposite direction is Sensational She-Hulk. I am not familiar with the series, and just by the title it seems as if the series is geared toward female empowerment, so it makes sense that over 75% of its issues passed the Bechdel test. 
 
-The Uncanny X-Men is the only other comic series recorded having over 50% of its issues passing the bechdel test, and it barely meets this threshold (52%). I am not surprised that it scored this highly given that equality and acceptance are major themes throughout the series, and yet I would think that an even higher percentage of its issues would have passed. The title does elicit a masculine-dominated vibe given that its "X-Men" not "X-Women", and yet the series addresses issues relating to gender fluidity and transgender rights among many other challenges faced by minority populations. For this reason, I am surprised that 48% of the issues do not even include two women having a conversation about something other than a man, which seems like a low threshold for proportionately representing women.
+The Uncanny X-Men is the only other comic series recorded having over 50% of its issues passing the Bechdel test, and it barely meets this threshold (52%). I am not surprised that it scored this highly given that equality and acceptance are major themes throughout the series, and yet I would think that an even higher percentage of its issues would have passed. The title does elicit a masculine-dominated vibe given that its "X-Men" not "X-Women", and yet the series addresses issues relating to gender fluidity and transgender rights among many other challenges faced by minority populations. For this reason, I am surprised that 48% of the issues do not even include two women having a conversation about something other than a man, which seems like a low threshold for proportionately representing women. 
+
+Perhaps these results are the case because the series is emphasizing the reality of the patriarchal nature of society and the struggles women have faced to be recognized, similarly to my hypothesized reasoning for Claremont's prevalent use of violence. 
 
 ```{r, echo = FALSE}
 # calculate proportion passed bechdel for xmen
@@ -148,6 +152,10 @@ ggplot(comic_bechdel, aes(x = series,
   theme_dark()
   
 ```
+
+Overall, the Claremont run of Uncanny X-Men had a powerful impact on the portrayal of social justice issues in comics and media and thus deserves greater historical recognition.
+
+Thanks for reading!
 
 The code used to generate this post is found [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-06-29-claremont-run-of-x-men.Rmd).
 
