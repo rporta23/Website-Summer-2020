@@ -6,10 +6,20 @@
     <description>Recent content on Rose Porta</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 01 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 08 Jul 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Coffee Ratings</title>
+      <link>/2020/07/08/coffee-ratings/</link>
+      <pubDate>Wed, 08 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/07/08/coffee-ratings/</guid>
+      <description>1
+This week’s #TidyTuesday data contains information about the professional ratings (on a 0-100 scale) of many varieties of coffee from around the world 2 3. The overall score for each variety is recorded along with sub-scores specifically rating various qualities of the coffee including aroma, flavor, aftertaste, acidity, body, balance, uniformity, sweetness, and moisture (1-10 scale). The species of the coffee, either Arabica or Robusta, is also recorded. This week, instead of using visualizations, I have taken a slightly different approach to this data.</description>
+    </item>
     
     <item>
       <title>Claremont Run of X-Men</title>

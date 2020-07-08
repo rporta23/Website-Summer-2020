@@ -1,0 +1,145 @@
+---
+title: Coffee Ratings
+author: Rose Porta
+date: '2020-07-08'
+slug: coffee-ratings
+categories: []
+tags: []
+---
+
+![](/post/2020-07-07-coffee-ratings_files/Roasted_coffee_beans.jpg){width=400px height=300px} ^[https://en.wikipedia.org/wiki/File:Roasted_coffee_beans.jpg]
+
+This week's #TidyTuesday data contains information about the professional ratings (on a 0-100 scale) of many varieties of coffee from around the world ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-07/readme.md] ^[https://github.com/jldbc/coffee-quality-database]. The overall score for each variety is recorded along with sub-scores specifically rating various qualities of the coffee including aroma, flavor, aftertaste, acidity, body, balance, uniformity, sweetness, and moisture (1-10 scale). The species of the coffee, either Arabica or Robusta, is also recorded. This week, instead of using visualizations, I have taken a slightly different approach to this data.
+
+In this post, I analyze the association between each sub-score and the overall score as well as the association between the species and the overall score using a multiple linear regression model. 
+
+
+# Model Summary
+
+A model with overall score as the response and each sub-score along with species as the explanatory variables shows a significant relationship between each subscore and the overall score (p < 0.05). The only coefficient that is insignificant is species. For most of the subscores, the coefficients are close to one indicating that on average, adjusting for each of the other variables, for each one point increase in the sub-score, the overall score increases by one point. Flavor has the largest positive coefficient value (1.4) indicating that an increase in the flavor score has a larger influence on the overall score than do the other sub-scores on average. The correlation matrix also shows that of all of the explanatory variables, flavor score has the strongest correlation with overall score (r = 0.874).
+
+The one sub-score that does not fit the pattern is moisture. Oddly, the model predicts that for every 1 point increase in the moisture score, the overall score will decrease by 0.379 points on average, adjusting for the other explanatory variables.
+
+Although the coefficient is not significant, the coefficient for species indicates that adjusting for each sub-score, the Robusta coffees scored slightly higher on average than the Arabica coffees. 
+
+It is possible that there are colinearity issues making this model inaccurate, as some of the sub-scores have relatively strong correlations with each other (the highest is around 0.85) as shown by a correlation matrix. Additionally, the the sub-scores do add up to create the overall score, so I'm not sure if this causes an issue for the model. 
+
+Overall, this model using these predictor variables accounts for about 99.4% of the variation in overall scores (R-squared = 0.994), which makes sense because it includes each component of the overall score. 
+
+The full model summary output is shown below.
+
+```{r, echo = FALSE, include = FALSE}
+# read in data
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
+# load packages
+library(tidyverse)
+library(cowplot)
+library(broom)
+```
+
+```{r, echo = FALSE}
+model <- lm(total_cup_points ~ aroma + flavor + aftertaste + acidity + body + balance + uniformity + clean_cup + sweetness + moisture + species, data = coffee_ratings)
+summary(model)
+```
+```{r, echo = FALSE}
+coffee2 <- coffee_ratings %>% 
+  select(total_cup_points, aroma, flavor, aftertaste, 
+    acidity, body, balance, uniformity, clean_cup, sweetness, 
+    moisture)
+coffee.cor <- cor(coffee2)
+```
+
+# Regression Assumptions
+
+In order to check the validity of this model for making predictions, I have tested the regression assumptions below:
+
+1. Linearity
+2. Constant Variance
+3. Normality of Residuals
+4. Randomness
+5. Independence
+
+I am not certain that this is a random sample, so randomness could be violated. Independence is reasonable because the rating of one type of coffee would not be likely to influence the rating of a different type.
+
+In order to check the linearity assumption, I have made scatter plots below with each sub-score on the x-axis and overall score on the y-axis. Most of the relationships appear approximately linear. The clean cup and sweetness scores do look like they could be slightly curved, and it is difficult to tell because there are so few points with very low scores. For most of the subscores, most of the points are clustered at the upper right corner, indicating that most coffees had relatively high scores and sub-scores. As shown by the coefficients of the model, there is a clear positive relationship between each sub-score and the overall score with the exception of the moisture category. 
+
+# Relationships Between Sub-score and Overall Score
+```{r, echo = FALSE}
+p_aroma <- ggplot(coffee_ratings, aes(x = aroma, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Aroma", y = "Overall")
+
+p_flavor <- ggplot(coffee_ratings, aes(x = flavor, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Flavor", y = "Overall")
+
+p_aftertaste <- ggplot(coffee_ratings, aes(x = aftertaste, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Aftertaste", y = "Overall")
+
+p_acidity <- ggplot(coffee_ratings, aes(x = acidity, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Acidity", y = "Overall")
+
+p_body <- ggplot(coffee_ratings, aes(x = body, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Body", y = "Overall")
+
+p_balance <- ggplot(coffee_ratings, aes(x = balance, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Balance", y = "Overall")
+
+p_uniformity <- ggplot(coffee_ratings, aes(x = uniformity, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Uniformity", y = "Overall")
+
+p_clean_cup <- ggplot(coffee_ratings, aes(x = clean_cup, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Clean Cup", y = "Overall")
+
+p_sweetness <- ggplot(coffee_ratings, aes(x = sweetness, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Sweetness", y = "Overall")
+
+p_moisture <- ggplot(coffee_ratings, aes(x = moisture, y = total_cup_points)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "Moisture", y = "Overall")
+
+coffee_grid <- plot_grid(p_aroma, p_flavor, p_aftertaste, p_acidity, p_body, p_balance, p_uniformity, p_clean_cup, p_sweetness, p_moisture, label_size = 10)
+
+coffee_grid
+
+
+```
+
+In order to test the constant variance assumption, I have generated a residuals versus fitted values plot below. Although most of the points are clustered at the upper end, they do not show a clear pattern, so the constant variance condition is met. 
+
+```{r, echo = FALSE}
+# Creates table of residuals stored in m1_data
+m1_coffee<-augment(model)
+
+# Creates residuals vs. fitted plot
+ggplot(data = m1_coffee, aes(x = .fitted, y = .resid))+
+  geom_point()+
+  labs(title = "Residuals Versus Fitted Plot")
+```
+
+In order to check the normality assumption, I have created a Normal Q-Q plot and a histogram of the residuals below. The normality assumption is questionable, as the Q-Q Plot is clearly curved (a straight line indicates normality), and the histogram of residuals does not quite approximate a normal distribution.
+
+```{r, echo = FALSE, message = FALSE}
+# Generates Q-Q Plot
+q_plot <- ggplot(data = m1_coffee, aes(sample = .resid))+
+  geom_qq()+
+  labs(title = "Q-Q Plot")
+
+# Generates histogram of residuals
+hist <- ggplot(data = m1_coffee, aes(x = .resid))+
+  geom_histogram()+
+  labs(title = "Histogram of Residuals")
+
+plot_grid(q_plot, hist)
+```
+
+Overall, although the normality assumption is violated, this model can still be useful to analyze the relationships between each sub-score and the overall score. I was surprised at how similar the patterns were when looking at each sub-score in relation to the overall score in the scatter plots, with the exception of the moisture category. There are so many more intriguing questions to dive into using this data as well. Check out [this article](https://www.thrillist.com/drink/nation/the-world-s-best-coffee-growing-countries-ethiopia-kenya-colombia-and-more) on the top coffee-producting countries and [this article](https://towardsdatascience.com/the-data-speak-ethiopia-has-the-best-coffee-91f88ed37e84) on where in the world to find the best coffee to see more creative ways to analyze this data. 
+
