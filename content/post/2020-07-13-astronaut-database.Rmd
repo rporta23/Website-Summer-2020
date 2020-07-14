@@ -1,0 +1,230 @@
+---
+title: Astronaut Database
+author: Rose Porta
+date: '2020-07-13'
+slug: astronaut-database
+categories: []
+tags: []
+draft: true
+---
+
+![](/post/2020-07-13-astronaut-database_files/astronaut-5080937_1280.jpg){width=400px height=300px} ^[https://pixabay.com/photos/astronaut-space-nasa-galaxy-5080937/]
+
+This week's #TidyTuesday data contains information about space missions between 1961 and 2020 ^[https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-07-14/readme.md] ^[Stavnichuk, Mariya; Corlett, Tatsuya (2020), “Astronaut database”, Mendeley Data, v1
+http://dx.doi.org/10.17632/86tsnnbv2w.1]. For each mission, it contains information about the mission itself such as the launch year as well as information about the astronaut including sex, birth year, nationality, and the total number of missions completed. 
+
+I start with an overview using time series plots to show the cumulative number of missions and hours of space travel since 1961 by sex. I then delve deeper into the demographics of the astronauts by exploring age distributions, sex, and the relationship between the age of an astronaut's first mission and how many total missions they complete. The data represents worldwide space travel, but for certain specified analyses I extract only astronauts from the U.S. 
+
+# Overview of Space Travel Over Time
+
+In order to visualize the overall trends in space travel by sex over time, I have created two time series plots below representing the total number of missions (first plot) and the total number of hours spent in space travel (second plot) since 1961. By the beginning of 2020, there had been 1,277 space missions (1,134 by men and 143 by women) adding up to a total of 1,341,979 hours of (recorded) space travel worldwide! That's over 153 years (counting missions running at the same time each separately)! Clearly, however, women are extremely underrepresented in this field. Even in 2019, there remains an enormous gap between the number of missions completed by female astronauts and the number completed by males. 
+
+```{r, echo = FALSE, include = FALSE}
+# lodd data
+astronauts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-14/astronauts.csv')
+
+# load packages
+library(tidyverse)
+library(cowplot)
+library(plotly)
+
+# disable scientific notation
+options(scipen=999)
+```
+
+```{r, echo = FALSE}
+# overall summary
+astronauts_summary <- astronauts %>% 
+  summarise(count = n(), total_hours = sum(hours_mission))
+
+# calculate cumulative sum of missions and hours by year and sex
+astronauts_2 <- astronauts %>% 
+  group_by(sex, year_of_mission) %>% 
+  arrange(year_of_mission) %>% 
+  summarise(total_missions_yr = n(), 
+            sum_hrs = sum(hours_mission)) %>% 
+  mutate(cumsum_missions = cumsum(total_missions_yr),
+         cumsum_hrs = cumsum(sum_hrs))
+```
+
+
+```{r, echo = FALSE}
+# create graph pf cumulative sum of missions
+p1 <- ggplot(astronauts_2, 
+             aes(x = year_of_mission, y = cumsum_missions, color = sex)) +
+  geom_line() +
+  labs(title = "Cumulative Sum of Astronaut Missions Over Time by Sex",
+       subtitle = "1961-2020",
+       x = "Year of Mission",
+       y = "Total Number of Missions (Cumulative Sum)",
+       color = "Sex") +
+  theme_dark()
+
+# create graph of cumulative hours of space travel
+p2 <- ggplot(astronauts_2, 
+             aes(x = year_of_mission, y = cumsum_hrs, color = sex)) +
+  geom_line() +
+  labs(title = "Cumulative Duration of Astronaut Missions Over Time by Sex",
+       subtitle = "1961-2020",
+       x = "Year of Mission",
+       y = "Cumulative Duration of Missions (hours)",
+       color = "Sex") +
+  theme_dark()
+
+p1
+p2
+```
+Below, I have reproduced the same two time series plots limiting the missions to only those completed by astronauts from the U.S. The trends are similar to the worldwide trends, although it is notable that no space missions were taken by women from the U.S. until 1983. The first woman from the U.S. to go on a space travel mission was Sally K. Ride. Ride was a physics professor and also the youngest American astronaut to have traveled to space ^[https://en.wikipedia.org/wiki/Sally_Ride]. The only two women to have engaged in space travel missions before Sally Ride were Valentina Tereshkova (1963) and and Svetlana Savitskaya (1982), both of the U.S.S.R.
+
+```{r, echo = FALSE}
+# filter U.S. Only
+astronauts_filtered <- astronauts %>% 
+  filter(nationality == "U.S.") %>% 
+  group_by(sex, year_of_mission) %>% 
+  arrange(year_of_mission) %>% 
+  summarise(total_missions_yr = n(), 
+            sum_hrs = sum(hours_mission)) %>% 
+  mutate(cumsum_missions = cumsum(total_missions_yr),
+         cumsum_hrs = cumsum(sum_hrs))
+
+p3 <- ggplot(astronauts_filtered, aes(x = year_of_mission, y = cumsum_missions, color = sex)) +
+  geom_line() +
+  labs(title = "Cumulative Sum of Astronaut Missions Over Time by Sex",
+       subtitle = "U.S. Only, 1961-2020",
+       x = "Year of Mission",
+       y = "Total Number of Missions (Cumulative Sum)",
+       color = "Sex") +
+  theme_dark()
+
+# create graph of cumulative hours of space travel
+p4 <- ggplot(astronauts_filtered, aes(x = year_of_mission, y = cumsum_hrs, color = sex)) +
+  geom_line() +
+  labs(title = "Cumulative Duration of Astronaut Missions Over Time by Sex",
+       subtitle = "U.S. Only, 1961-2020",
+       x = "Year of Mission",
+       y = "Cumulative Duration of Missions (hours)",
+       color = "Sex") +
+  theme_dark()
+
+p3
+p4
+```
+
+# Age Distributions of Astronauts
+
+To visualize the age distributions of astronauts, I have created two violin plots below showing the age distributions by sex for astronauts embarking on their first space travel mission (first plot) and their last space travel mission (second plot). The lines represent the first, second (median) and third quartiles. 
+
+Not surprisingly, the median ages for astronauts on their last mission are slightly higher than for those on their first for both sexes. Also, the median age for women is slightly lower than that for men in both plots. There is some duplication in the cases of astronauts who only participated in one mission. All distributions appear to be relatively normal, although there is a very wide range of ages for both sexes. 
+
+Notably, John Glen was the oldest astronaut to fly in space, having participated in his last space travel mission at age 77. He is also known for being the first American to orbit the Earth (1962), the fifth person and third American in space, and an Ohio Democratic senator of 24 years (1974-1999) ^[https://en.wikipedia.org/wiki/John_Glenn].
+
+```{r, echo = FALSE}
+# calculate ages of astronauts at first and last missions
+astronauts_age <- astronauts %>% 
+  group_by(name, sex, nationality, year_of_birth,
+           total_number_of_missions) %>% 
+  summarize(year_first_mission = min(year_of_mission),
+         year_last_mission = max(year_of_mission)) %>%
+  mutate(age_first_mission = year_first_mission - year_of_birth,
+         age_last_mission = year_last_mission - year_of_birth)
+
+```
+
+```{r, echo = FALSE}
+# create violin plots of age distributions at first and last missions
+ggplot(astronauts_age, aes(x = sex, y = age_first_mission, fill = sex)) +
+  geom_violin(alpha = 0.5, 
+              draw_quantiles = c(0.25, 0.5, 0.75),
+              trim = FALSE) +
+  labs(title = "Age Distribution of Astronauts at Time of First Mission",
+       x = "Sex",
+       y = "Age", 
+       fill = "Sex") +
+  theme_dark()
+
+ggplot(astronauts_age, aes(x = sex, y = age_last_mission, fill = sex)) +
+  geom_violin(alpha = 0.5, 
+              draw_quantiles = c(0.25, 0.5, 0.75),
+              trim = FALSE) +
+  labs(title = "Age Distribution of Astronauts at Time of Last Mission",
+       x = "Sex",
+       y = "Age", 
+       fill = "Sex") +
+  theme_dark()
+```
+
+# Number of Missions by Sex
+
+The violin plot below visualizes the distributions of number of space missions completed (per astronaut) by sex. Surprisingly, although the distributions are shaped differently, the median number of missions seems to be around 2 for both males and females. I would have predicted that the number of missions per astronaut would have been significantly higher for males based on the previous patterns. 
+
+For some reason this plot is a bit misleading making it appear as if some astronauts participated in less than 0 missions. In reality, the minimum number of missions is 1 for both sexes. 
+
+```{r, echo = FALSE}
+# violin plot of distribution of number of missions
+ggplot(astronauts_age, 
+       aes(x = sex, y = total_number_of_missions, fill = sex)) +
+  geom_violin(alpha = 0.5,
+              draw_quantiles = c(0.25, 0.5, 0.75),
+              trim = FALSE) +
+  scale_y_continuous() +
+  theme_dark()
+```
+
+# Relationship Between Age at First Mission and Total Number of Missions
+
+The interactive scatterplot below shows the relationship between the age of an astronaut on their first mission and the total number of missions on which they would eventually participate. There is a clear negative association between these two variables, although there is a very wide age range for those who only participated in one mission. Hover over a point to see more information about any particular astronaut. 
+
+```{r, echo = FALSE}
+# create scatterplot of age at first mission versus total number of missions
+plot_age <- ggplot(astronauts_age, aes(x = age_first_mission, 
+                           y = total_number_of_missions,
+                           color = sex,
+                           text = paste("Name:", name, "<br>",
+                                        "Nationality:", nationality,
+                                        "<br>", 
+                                        "Year of First Mission:",
+                                        year_first_mission,
+                                        "<br>",
+                                        "Year of Last Mission:",
+                                        year_last_mission
+                                        ))) +
+  geom_point(alpha = 0.5) +
+  geom_jitter() +
+  labs(title = "Age at First Mission Versus Total Number of Missions",
+       x = "Age at First Mission",
+       y = "Total Number of Missions",
+       color = "Sex") +
+  theme_dark()
+ggplotly(plot_age)
+```
+
+Since the scatter plot for all astronauts worldwide is very densely packed with points, I have created a separate plot below highlighting only American astronauts. 
+
+```{r, echo = FALSE}
+# filter U.S. only
+astronauts_age_filtered <- astronauts_age %>% 
+  filter(nationality == "U.S.")
+
+plot_age_us <- ggplot(astronauts_age_filtered, aes(x = age_first_mission, 
+                           y = total_number_of_missions,
+                           color = sex,
+                           text = paste("Name:", name,
+                                        "<br>", 
+                                        "Year of First Mission:",
+                                        year_first_mission,
+                                        "<br>",
+                                        "Year of Last Mission:",
+                                        year_last_mission))) +
+  geom_point(alpha = 0.5) +
+  geom_jitter() +
+  labs(
+    title = "Age at First Mission Versus Total Number of Missions, U.S. Only",
+       subtitle = "U.S. Astronauts Only",
+       x = "Age at First Mission",
+       y = "Total Number of Missions",
+       color = "Sex") +
+  theme_dark()
+ggplotly(plot_age_us)
+```
+
+Overall, the patterns show that women have been extremely underrepresented among astronauts since space travel became possible. Thus, we must make it a priority to increase gender/sex diversity in this field. 
