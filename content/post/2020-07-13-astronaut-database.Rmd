@@ -1,11 +1,10 @@
 ---
 title: Astronaut Database
 author: Rose Porta
-date: '2020-07-13'
+date: '2020-07-15'
 slug: astronaut-database
 categories: []
 tags: []
-draft: true
 ---
 
 ![](/post/2020-07-13-astronaut-database_files/astronaut-5080937_1280.jpg){width=400px height=300px} ^[https://pixabay.com/photos/astronaut-space-nasa-galaxy-5080937/]
@@ -155,17 +154,16 @@ ggplot(astronauts_age, aes(x = sex, y = age_last_mission, fill = sex)) +
 
 # Number of Missions by Sex
 
-The violin plot below visualizes the distributions of number of space missions completed (per astronaut) by sex. Surprisingly, although the distributions are shaped differently, the median number of missions seems to be around 2 for both males and females. I would have predicted that the number of missions per astronaut would have been significantly higher for males based on the previous patterns. 
-
-For some reason this plot is a bit misleading making it appear as if some astronauts participated in less than 0 missions. In reality, the minimum number of missions is 1 for both sexes. 
+The boxplot below visualizes the distributions of number of space missions completed (per astronaut) by sex. Surprisingly, the median number of missions seems to be around 2 for both males and females. I would have predicted that the number of missions per astronaut would have been significantly higher for males based on the previous patterns. 
 
 ```{r, echo = FALSE}
 # violin plot of distribution of number of missions
 ggplot(astronauts_age, 
        aes(x = sex, y = total_number_of_missions, fill = sex)) +
-  geom_violin(alpha = 0.5,
-              draw_quantiles = c(0.25, 0.5, 0.75),
-              trim = FALSE) +
+  geom_boxplot() +
+  #geom_violin(alpha = 0.5,
+   #           draw_quantiles = c(0.25, 0.5, 0.75),
+   #           trim = FALSE) +
   scale_y_continuous() +
   theme_dark()
 ```
@@ -205,10 +203,11 @@ Since the scatter plot for all astronauts worldwide is very densely packed with 
 astronauts_age_filtered <- astronauts_age %>% 
   filter(nationality == "U.S.")
 
-plot_age_us <- ggplot(astronauts_age_filtered, aes(x = age_first_mission, 
-                           y = total_number_of_missions,
-                           color = sex,
-                           text = paste("Name:", name,
+plot_age_us <- ggplot(astronauts_age_filtered,
+                      aes(x = age_first_mission, 
+                          y = total_number_of_missions,
+                          color = sex,
+                          text = paste("Name:", name,
                                         "<br>", 
                                         "Year of First Mission:",
                                         year_first_mission,
@@ -219,7 +218,6 @@ plot_age_us <- ggplot(astronauts_age_filtered, aes(x = age_first_mission,
   geom_jitter() +
   labs(
     title = "Age at First Mission Versus Total Number of Missions, U.S. Only",
-       subtitle = "U.S. Astronauts Only",
        x = "Age at First Mission",
        y = "Total Number of Missions",
        color = "Sex") +
@@ -228,3 +226,5 @@ ggplotly(plot_age_us)
 ```
 
 Overall, the patterns show that women have been extremely underrepresented among astronauts since space travel became possible. Thus, we must make it a priority to increase gender/sex diversity in this field. 
+
+The code used to generate this post is found [here](https://github.com/rporta23/Website-Summer-2020/blob/master/content/post/2020-07-13-astronaut-database.Rmd). 

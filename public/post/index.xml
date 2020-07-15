@@ -6,17 +6,17 @@
     <description>Recent content in Posts on Rose Porta</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 13 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jul 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Astronaut Database</title>
-      <link>/2020/07/13/astronaut-database/</link>
-      <pubDate>Mon, 13 Jul 2020 00:00:00 +0000</pubDate>
+      <link>/2020/07/15/astronaut-database/</link>
+      <pubDate>Wed, 15 Jul 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/07/13/astronaut-database/</guid>
+      <guid>/2020/07/15/astronaut-database/</guid>
       <description>1
 This week’s #TidyTuesday data contains information about space missions between 1961 and 2020 2 3. For each mission, it contains information about the mission itself such as the launch year as well as information about the astronaut including sex, birth year, nationality, and the total number of missions completed.
 I start with an overview using time series plots to show the cumulative number of missions and hours of space travel since 1961 by sex.</description>
